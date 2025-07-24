@@ -69,6 +69,9 @@ Ce dépôt contient une sélection de fichiers issus du développement de la pla
 - `/controllers` → exemples de controllers utilisateur (favoris, historique…)
 - `/templates` → extraits de vues Twig (accueil, formulaire, compte)
 - `/services` → logique de validation, sécurité, Google OAuth2
+- `/command` → logique de commande mise ne place pour éxécuter certaines fonctionnalités
+- `/js` → quelques fichiers javascript pour la mise en place de fonctionnalités
+- `/config` → fichiers de configuration pour l'application (sécurité, routing ...) avec l'utilisation de bundle
 
 
 ---
