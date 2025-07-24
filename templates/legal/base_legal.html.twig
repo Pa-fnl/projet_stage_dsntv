@@ -1,0 +1,38 @@
+{# templates/legal/base_legal.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container legal-container mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="list-group">
+                <a href="{{ path('legal_notice') }}" class="list-group-item list-group-item-action {% if app.request.attributes.get('_route') == 'legal_notice' %}active{% endif %}">
+                    Mentions légales
+                </a>
+                <a href="{{ path('terms_of_use') }}" class="list-group-item list-group-item-action {% if app.request.attributes.get('_route') == 'terms_of_use' %}active{% endif %}">
+                    Conditions générales d'utilisation
+                </a>
+                <a href="{{ path('privacy_policy') }}" class="list-group-item list-group-item-action {% if app.request.attributes.get('_route') == 'privacy_policy' %}active{% endif %}">
+                    Politique de confidentialité
+                </a>
+                <a href="{{ path('cookie_preferences') }}" class="list-group-item list-group-item-action {% if app.request.attributes.get('_route') == 'cookie_preferences' %}active{% endif %}">
+                    Préférences de confidentialité
+                </a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title mb-4">{% block legal_title %}{% endblock %}</h1>
+                    <div class="legal-content">
+                        {% block legal_content %}{% endblock %}
+                    </div>
+                    <div class="text-muted mt-4">
+                        Dernière mise à jour : {% block last_update %}{{ "now"|date("d/m/Y") }}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

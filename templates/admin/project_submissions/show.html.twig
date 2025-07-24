@@ -1,0 +1,173 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ submission.projectTitle }} | Administration | DSNTV{% endblock %}
+
+
+
+{% block body %}
+<div class="container py-5">
+    <a href="{{ path('admin_project_submissions') }}" class="btn-back">
+        <i class="ri-arrow-left-line"></i> Retour à la liste
+    </a>
+    
+    <div class="admin-header text-white">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <h1 class="mb-0">{{ submission.projectTitle }}</h1>
+                <span class="status-badge bg-{{ submission.status.badgeClass }}">
+                    {{ submission.status.label }}
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="admin-card mb-4">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">Informations sur le projet</h3>
+                </div>
+                <div class="admin-card-body">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Type de projet</span>
+                            <span class="info-value">
+                                {% if submission.projectType == 'existing_show' %}
+                                    <span class="project-type show">Participation à une émission</span>
+                                {% elseif submission.projectType == 'new_concept' %}
+                                    <span class="project-type concept">Nouveau concept d'émission</span>
+                                {% elseif submission.projectType == 'report' %}
+                                    <span class="project-type report">Reportage ponctuel</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Date de soumission</span>
+                            <span class="info-value">{{ submission.createdAt|date('d/m/Y H:i') }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Dernière mise à jour</span>
+                            <span class="info-value">{{ submission.updatedAt|date('d/m/Y H:i') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="admin-card mb-4">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">Coordonnées du demandeur</h3>
+                </div>
+                <div class="admin-card-body">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Nom</span>
+                            <span class="info-value">{{ submission.name }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">
+                                <a href="mailto:{{ submission.email }}" class="text-info">{{ submission.email }}</a>
+                            </span>
+                        </div>
+                        
+                        {% if submission.phone %}
+                            <div class="info-item">
+                                <span class="info-label">Téléphone</span>
+                                <span class="info-value">{{ submission.phone }}</span>
+                            </div>
+                        {% endif %}
+                        
+                        {% if submission.organization %}
+                            <div class="info-item">
+                                <span class="info-label">Organisation</span>
+                                <span class="info-value">{{ submission.organization }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="admin-card mb-4">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">Description du projet</h3>
+                </div>
+                <div class="admin-card-body">
+                    <div class="description-content">
+                        {{ submission.projectDescription|nl2br }}
+                    </div>
+                </div>
+            </div>
+            
+            {% if submission.attachments|length > 0 %}
+                <div class="admin-card mb-4">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Documents joints</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="attachments-list">
+                            {% for attachment in submission.attachments %}
+                                <div class="attachment-item">
+                                    <span class="attachment-icon">
+                                        <i class="ri-file-line"></i>
+                                    </span>
+                                    <span class="attachment-name">
+                                        {{ attachment }}
+                                    </span>
+                                    <a href="{{ asset('uploads/project_submissions/' ~ attachment) }}" class="text-info ms-2" download>
+                                        <i class="ri-download-line"></i>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="admin-card mb-4">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">Mettre à jour le statut</h3>
+                </div>
+                <div class="admin-card-body">
+                    <form action="{{ path('admin_project_submission_update_status', {'id': submission.id}) }}" method="post">
+                        <div class="mb-4">
+                            <label for="status" class="form-label">Nouveau statut</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="new" {% if submission.status.value == 'new' %}selected{% endif %}>Nouveau</option>
+                                <option value="reviewing" {% if submission.status.value == 'reviewing' %}selected{% endif %}>En cours d'examen</option>
+                                <option value="accepted" {% if submission.status.value == 'accepted' %}selected{% endif %}>Accepté</option>
+                                <option value="rejected" {% if submission.status.value == 'rejected' %}selected{% endif %}>Refusé</option>
+                                <option value="completed" {% if submission.status.value == 'completed' %}selected{% endif %}>Complété</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="admin_comments" class="form-label">Commentaires (visibles pour l'utilisateur)</label>
+                            <textarea name="admin_comments" id="admin_comments" rows="5" class="form-control">{{ submission.adminComments }}</textarea>
+                        </div>
+                        
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">Contacter le demandeur</h3>
+                </div>
+                <div class="admin-card-body">
+                    <a href="mailto:{{ submission.email }}" class="btn btn-outline-light w-100">
+                        <i class="ri-mail-line"></i> Envoyer un email
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

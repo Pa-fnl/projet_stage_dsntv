@@ -1,0 +1,100 @@
+{# templates/legal/cookie_preferences.html.twig #}
+{% extends 'legal/base_legal.html.twig' %}
+
+{% block title %}Préférences de confidentialité | {{ parent() }}{% endblock %}
+
+{% block legal_title %}Préférences de confidentialité{% endblock %}
+
+{% block legal_content %}
+<section>
+    <h2>Gestion de vos préférences en matière de cookies</h2>
+    <p>
+        Cette page vous permet de gérer vos préférences concernant les cookies utilisés sur notre site web.
+    </p>
+</section>
+
+<section class="mt-4">
+    <h3>Qu'est-ce qu'un cookie ?</h3>
+    <p>
+        Un cookie est un petit fichier texte stocké sur votre appareil lorsque vous visitez un site web. Les cookies servent à différentes fonctions, comme vous reconnaître lors de vos prochaines visites, mémoriser vos préférences ou analyser votre comportement de navigation pour améliorer notre site.
+    </p>
+</section>
+
+<section class="mt-4">
+    <h3>Types de cookies que nous utilisons</h3>
+    <div class="cookie-settings mt-3">
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="essential-cookies" checked disabled>
+            <label class="form-check-label" for="essential-cookies">
+                <strong>Cookies essentiels</strong> - Nécessaires au fonctionnement du site
+            </label>
+            <p class="text-muted small mt-1">Ces cookies sont indispensables au fonctionnement de notre site et ne peuvent pas être désactivés.</p>
+        </div>
+        
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="functional-cookies">
+            <label class="form-check-label" for="functional-cookies">
+                <strong>Cookies fonctionnels</strong> - Pour une meilleure expérience utilisateur
+            </label>
+            <p class="text-muted small mt-1">Ces cookies permettent d'améliorer les fonctionnalités du site (mémorisation de vos préférences, etc.).</p>
+        </div>
+        
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="analytics-cookies">
+            <label class="form-check-label" for="analytics-cookies">
+                <strong>Cookies analytiques</strong> - Pour comprendre comment notre site est utilisé
+            </label>
+            <p class="text-muted small mt-1">Ces cookies nous aident à comprendre comment les visiteurs interagissent avec notre site.</p>
+        </div>
+        
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="marketing-cookies">
+            <label class="form-check-label" for="marketing-cookies">
+                <strong>Cookies marketing</strong> - Pour vous présenter des publicités pertinentes
+            </label>
+            <p class="text-muted small mt-1">Ces cookies sont utilisés pour vous présenter des publicités personnalisées.</p>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <button class="btn btn-primary" id="save-preferences">Enregistrer mes préférences</button>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Récupérer les préférences stockées
+    const cookiePreferences = JSON.parse(localStorage.getItem('cookiePreferences') || '{}');
+    
+    // Définir l'état des checkboxes selon les préférences stockées
+    if (cookiePreferences.functional !== undefined) {
+        document.getElementById('functional-cookies').checked = cookiePreferences.functional;
+    }
+    if (cookiePreferences.analytics !== undefined) {
+        document.getElementById('analytics-cookies').checked = cookiePreferences.analytics;
+    }
+    if (cookiePreferences.marketing !== undefined) {
+        document.getElementById('marketing-cookies').checked = cookiePreferences.marketing;
+    }
+    
+    // Enregistrer les préférences
+    document.getElementById('save-preferences').addEventListener('click', function() {
+        const newPreferences = {
+            essential: true, // Toujours activé
+            functional: document.getElementById('functional-cookies').checked,
+            analytics: document.getElementById('analytics-cookies').checked,
+            marketing: document.getElementById('marketing-cookies').checked
+        };
+        
+        localStorage.setItem('cookiePreferences', JSON.stringify(newPreferences));
+        
+        // Ici, vous pouvez ajouter du code pour appliquer ces préférences
+        // (par exemple, supprimer ou désactiver certains cookies)
+        
+        alert('Vos préférences ont été enregistrées.');
+    });
+});
+</script>
+{% endblock %}
+
+{% block last_update %}15/04/2024{% endblock %}

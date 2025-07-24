@@ -1,0 +1,57 @@
+<div class="twitch-embed-container" style="position: relative; min-height: 500px; background-color: #121212;">
+    <!-- Message de consentement superposé -->
+    <div class="placeholder" style="{% if not showStream %}display: flex;{% else %}display: none;{% endif %} position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background-color: rgba(0,0,0,0.8); flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;">
+        <p style="color: white; font-size: 18px; margin-bottom: 20px;">Pour voir ce stream Twitch, veuillez accepter les cookies marketing</p>
+        <button class="enable-marketing-cookies" style="padding: 12px 24px; background: #9146FF; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 16px;">Activer les cookies marketing</button>
+    </div>
+    
+    <!-- Container du player Twitch -->
+    <div id="twitch-player-container" style="width: 100%; height: 100%;">
+        <div id="twitch-embed"></div>
+        <!-- J'ai supprimé le div "offline-message" puisque Twitch affiche déjà son propre message -->
+    </div>
+</div>
+
+<script src="https://player.twitch.tv/js/embed/v1.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Vérifier si les cookies marketing sont activés
+    var marketingAllowed = document.cookie.indexOf('cookie_marketing=true') !== -1;
+    
+    var placeholder = document.querySelector('.placeholder');
+    var twitchPlayerContainer = document.getElementById('twitch-player-container');
+    
+    if (marketingAllowed) {
+        placeholder.style.display = 'none';
+        
+        // Initialiser le player Twitch seulement si les cookies sont acceptés
+        const channelName = '{{ channelName }}';
+        
+        // Initialize Twitch Player
+        const options = {
+            width: '100%',
+            height: '100%',
+            channel: channelName,
+            parent: ["localhost", "127.0.0.1", window.location.hostname]
+        };
+        
+        const player = new Twitch.Player("twitch-embed", options);
+        
+        // Set default volume
+        player.addEventListener(Twitch.Player.READY, () => {
+            player.setVolume(0.5);
+            
+            // J'ai supprimé les événements ONLINE et OFFLINE puisque nous n'utilisons plus
+            // notre propre message de statut hors ligne
+        });
+    } else {
+        placeholder.style.display = 'flex';
+    }
+    
+    // Gestionnaire pour activer les cookies marketing
+    document.querySelector('.enable-marketing-cookies').addEventListener('click', function() {
+        document.cookie = "cookie_marketing=true;path=/;max-age=31536000";
+        window.location.reload();
+    });
+});
+</script>

@@ -1,0 +1,47 @@
+<div class="youtube-container" style="width: 100%; position: relative;">
+    <div class="placeholder" style="{% if not showVideo %}display: block;{% else %}display: none;{% endif %} background-color: #222; color: white; padding: 40px 20px; text-align: center; border-radius: 8px; min-height: 315px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <p style="font-size: 18px; margin-bottom: 20px;">Pour voir cette vidéo YouTube, veuillez accepter les cookies marketing</p>
+        <button class="enable-marketing-cookies" style="padding: 12px 24px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold;">Activer les cookies marketing</button>
+    </div>
+    
+    <div class="video-embed" style="{% if showVideo %}display: block;{% else %}display: none;{% endif %} position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
+        <iframe 
+            class="video-iframe"
+            data-video-id="{{ videoIdDatabase }}"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+            src="https://www.youtube.com/embed/{{ videoYoutubeId }}" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Vérifier si les cookies marketing sont activés
+    var marketingAllowed = document.cookie.indexOf('cookie_marketing=true') !== -1;
+    
+    document.querySelectorAll('.youtube-container').forEach(function(container) {
+        var placeholder = container.querySelector('.placeholder');
+        var videoEmbed = container.querySelector('.video-embed');
+        
+        if (marketingAllowed) {
+            placeholder.style.display = 'none';
+            videoEmbed.style.display = 'block';
+        } else {
+            placeholder.style.display = 'flex';
+            videoEmbed.style.display = 'none';
+        }
+    });
+    
+    // Gestionnaire pour activer les cookies marketing
+    document.querySelectorAll('.enable-marketing-cookies').forEach(function(button) {
+        button.addEventListener('click', function() {
+            document.cookie = "cookie_marketing=true;path=/;max-age=31536000";
+            window.location.reload();
+        });
+    });
+});
+</script>

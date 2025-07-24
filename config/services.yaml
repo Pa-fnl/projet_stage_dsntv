@@ -1,0 +1,45 @@
+services:
+  # Configuration par défaut pour les services
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  # Les classes dans src/ sont disponibles comme services
+  App\:
+    resource: "../src/"
+    exclude:
+      - "../src/DependencyInjection/"
+      - "../src/Entity/"
+      - "../src/Kernel.php"
+
+  # Service d'historique avec configuration du nombre maximum d'entrées
+  App\Service\HistoryService:
+    arguments:
+      $entityManager: "@doctrine.orm.entity_manager"
+      $maxHistoryEntries: 50
+
+  App\Service\YoutubeService:
+    arguments:
+      $youtubeApiKey: "%env(YOUTUBE_API_KEY)%"
+      $youtubeChannelId: "%env(YOUTUBE_CHANNEL_ID)%"
+
+  # Configuration du service de notification
+  App\Service\NotificationService:
+    arguments:
+      $adminEmail: ""
+      $noReplyEmail: ""
+      $siteName: ""
+
+  App\Service\RecaptchaService:
+    arguments:
+      $secretKey: "%google_recaptcha_secret_key%"
+
+parameters:
+  avatars_directory: "%kernel.project_dir%/public/uploads/avatars"
+  uploads_directory: "%kernel.project_dir%/public/uploads" # Ajout pour les uploads de projets
+  # Autres paramètres globaux
+  twitch_channel: "%env(TWITCH_CHANNEL)%"
+  twitch_client_id: "%env(TWITCH_CLIENT_ID)%"
+  twitch_access_token: "%env(TWITCH_ACCESS_TOKEN)%"
+  article_images_directory: "%kernel.project_dir%/public/uploads/articles"
+  app.preview_token_salt: "dsntv_preview_token"

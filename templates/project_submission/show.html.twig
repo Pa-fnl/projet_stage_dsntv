@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ submission.projectTitle }} | DSNTV{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('show_project') }} 
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="page-header mb-4">
+        <div class="container">
+            <a href="{{ path('app_my_projects') }}" class="btn-back mb-3">
+                <i class="ri-arrow-left-line"></i> Retour à mes projets
+            </a>
+            <h1>{{ submission.projectTitle }}</h1>
+            <span class="status-badge">
+                {{ submission.status.label }}
+            </span>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="project-card">
+                <div class="project-section">
+                    <h3 class="section-title">Informations générales</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Type de projet</span>
+                            <span class="info-value">
+                                {% if submission.projectType == 'existing_show' %}
+                                    Participation à une émission
+                                {% elseif submission.projectType == 'new_concept' %}
+                                    Nouveau concept d'émission
+                                {% elseif submission.projectType == 'report' %}
+                                    Reportage ponctuel
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Date de soumission</span>
+                            <span class="info-value">{{ submission.createdAt|date('d/m/Y H:i') }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Dernière mise à jour</span>
+                            <span class="info-value">{{ submission.updatedAt|date('d/m/Y H:i') }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Statut actuel</span>
+                            <span class="info-value">{{ submission.status.label }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-section">
+                    <h3 class="section-title">Coordonnées</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Nom</span>
+                            <span class="info-value">{{ submission.name }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">{{ submission.email }}</span>
+                        </div>
+                        
+                        {% if submission.phone %}
+                            <div class="info-item">
+                                <span class="info-label">Téléphone</span>
+                                <span class="info-value">{{ submission.phone }}</span>
+                            </div>
+                        {% endif %}
+                        
+                        {% if submission.organization %}
+                            <div class="info-item">
+                                <span class="info-label">Organisation</span>
+                                <span class="info-value">{{ submission.organization }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="project-section">
+                    <h3 class="section-title">Description du projet</h3>
+                    <div class="description-content">
+                        {{ submission.projectDescription|nl2br }}
+                    </div>
+                </div>
+                
+                {% if submission.attachments|length > 0 %}
+                    <div class="project-section">
+                        <h3 class="section-title">Documents joints</h3>
+                        <div class="attachments-list">
+                            {% for attachment in submission.attachments %}
+                                <div class="attachment-item">
+                                    <span class="attachment-icon">
+                                        <i class="ri-file-line"></i>
+                                    </span>
+                                    <span class="attachment-name">
+                                        {{ attachment }}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if submission.adminComments %}
+                    <div class="project-section">
+                        <h3 class="section-title">Retour de l'équipe DSNTV</h3>
+                        <div class="admin-message">
+                            <div class="admin-message-title">Message de notre équipe :</div>
+                            <div class="admin-message-content">
+                                {{ submission.adminComments|nl2br }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

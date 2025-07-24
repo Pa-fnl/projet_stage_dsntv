@@ -1,0 +1,80 @@
+{# templates/security/login.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+<section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 px-4 py-12 overflow-hidden">
+  {# ==== Bulles décoratives  ==== #}
+  <div class="absolute inset-0 pointer-events-none">
+    <!-- Verte très pâle -->
+    <span class="absolute top-12 left-8 w-40 h-40 bg-green-500/10 rounded-full"></span>
+    <!-- Jaune très pâle -->
+    <span class="absolute bottom-24 -right-16 w-64 h-64 bg-yellow-400/10 rounded-full"></span>
+    <!-- Rouge très pâle -->
+    <span class="absolute top-1/2 right-1/4 w-24 h-24 bg-red-500/10 rounded-full"></span>
+  </div>
+
+  {# ==== Carte de connexion ==== #}
+  <div class="relative z-10 w-full max-w-md glass-effect backdrop-blur-lg bg-white/10 rounded-3xl shadow-2xl p-8">
+    
+    {# Logo & accroche #}
+    <div class="text-center mb-8">
+      <a href="{{ path('app_homepage') }}" class="inline-block">
+        <span class="block text-5xl font-extrabold gradient-text">DSNTV</span>
+      </a>
+      <p class="mt-2 text-gray-300">Connectez-vous pour accéder à votre espace</p>
+    </div>
+
+    {# Titre #}
+    <h2 class="text-3xl font-semibold text-white text-center mb-6">Connexion</h2>
+
+    {# Erreur éventuelle #}
+    {% if error %}
+      <div class="bg-red-500/20 border-l-4 border-red-500 text-white p-4 rounded-lg mb-6">
+        <div class="flex items-start">
+          <i class="ri-error-warning-line text-red-500 text-2xl mr-3"></i>
+          <p>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+        </div>
+      </div>
+    {% endif %}
+
+    {# Séparateur “ou” #}
+    <div class="flex items-center my-6">
+      <hr class="flex-1 border-gray-500/50" />
+      <span class="px-4 text-gray-400">Connectez-vous avec</span>
+      <hr class="flex-1 border-gray-500/50" />
+    </div>
+
+    
+    {# Bouton social #}
+    <div class="space-y-4">
+        {% set showButton = app.request.cookies.get('cookie_functional') == 'true' %}
+        <div class="w-full flex justify-center">
+            <div
+                class="border-2 border-green-400/50 rounded-lg p-1 drop-shadow-md 
+                hover:border-green-400 hover:scale-105 transition-all duration-200"
+            >
+                {% include 'security/google-auth-button.html.twig' with {'showButton': showButton} %}
+            </div>
+        </div>
+    </div>
+
+    {% if not showButton %}
+      <p class="mt-4 text-center text-sm text-gray-400">
+        Pour utiliser la connexion Google, acceptez les cookies fonctionnels.
+      </p>
+    {% endif %}
+
+    {# Mentions légales #}
+    <p class="mt-8 text-center text-xs text-gray-500">
+      En vous connectant, vous acceptez nos
+      <a href="{{ path('terms_of_use') }}" class="text-white/70 underline hover:text-white">
+      Conditions d’utilisation
+      </a>
+      et notre
+      <a href="{{ path('privacy_policy') }}" class="underline hover:text-white">Politique de confidentialité</a>.
+    </p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,107 @@
+nelmio_security:
+  # Protection contre le clickjacking
+  clickjacking:
+    paths:
+      "^/": DENY # Bloque l'inclusion de votre site dans des iframes
+
+  # Désactivation du sniffing MIME
+  content_type:
+    nosniff: true
+
+  # Protection XSS intégrée au navigateur
+  xss_protection:
+    enabled: true
+    mode_block: true
+
+  # Politique de référent
+  referrer_policy:
+    enabled: true
+    policies:
+      - "strict-origin-when-cross-origin"
+
+  # Configuration SSL lors de la mise en prod changer le enabled à true
+  forced_ssl:
+    enabled: false
+    hsts_max_age: 31536000 # 1 an
+    hsts_subdomains: true
+    hsts_preload: true
+
+  # Content Security Policy
+  csp:
+    enabled: true
+    report_logger_service: logger
+    hosts: []
+    content_types: []
+    enforce:
+      default-src:
+        - "self"
+      script-src:
+        - "self"
+        - "unsafe-inline"
+        - "unsafe-eval"
+        - "https://cdn.tailwindcss.com"
+        - "https://cdn.jsdelivr.net"
+        - "https://player.twitch.tv"
+        - "https://www.youtube.com"
+        - "https://www.google.com"
+        - "https://apis.google.com"
+        - "https://accounts.google.com"
+        - "https://*.gstatic.com"
+        - "https://www.google.com/recaptcha/"
+        - "https://www.gstatic.com/recaptcha/"
+        - "https://cdn.tiny.cloud"
+        - "https://www.googletagmanager.com"
+        - "https://www.google-analytics.com"
+
+      # Styles autorisés
+      style-src:
+        - "self"
+        - "unsafe-inline"
+        - "https://cdn.tailwindcss.com"
+        - "https://cdn.jsdelivr.net"
+        - "https://fonts.googleapis.com"
+        - "https://*.gstatic.com"
+        - "https://cdn.tiny.cloud"
+
+      # Images autorisées
+      img-src:
+        - "self"
+        - "data:"
+        - "https:" # Autoriser les images de toutes sources HTTPS
+        - "blob:" # Autoriser les images de toutes sources HTTPS
+
+      # Frames autorisés
+      frame-src:
+        - "self"
+        - "https://www.youtube.com"
+        - "https://player.twitch.tv"
+        - "https://embed.twitch.tv"
+        - "https://www.google.com"
+        - "https://accounts.google.com"
+        - "https://apis.google.com"
+        - "https://www.google.com/recaptcha/"
+        - "https://cdn.tiny.cloud"
+
+      # Connexions AJAX/fetch
+      connect-src:
+        - "self"
+        - "https://www.google.com"
+        - "https://accounts.google.com"
+        - "https://apis.google.com"
+        - "https://*.twitch.tv"
+        - "https://api.twitch.tv"
+        - "https://cdn.tiny.cloud"
+        - 'https://region1.google-analytics.com'
+
+      # Médias
+      media-src:
+        - "self"
+        - "https://www.youtube.com"
+        - "https://*.twitch.tv"
+
+      # Sources de polices
+      font-src:
+        - "self"
+        - "data:"
+        - "https://fonts.gstatic.com"
+        - "https://cdn.jsdelivr.net"

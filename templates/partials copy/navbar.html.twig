@@ -1,0 +1,627 @@
+
+<!-- Navbar -->
+<nav class="glass-effect sticky top-0 z-50 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="{{ path('app_homepage') }}" class="text-2xl font-bold gradient-text">DSNTV</a>
+        
+        <!-- Menu desktop avec indicateur de page active -->
+        <div class="hidden md:flex space-x-8">
+            <a href="{{ path('app_homepage') }}" class="hover:text-white transition-colors relative {% if app.request.attributes.get('_route') == 'app_homepage' %}active-nav{% endif %}">
+                Accueil
+                {% if app.request.attributes.get('_route') == 'app_homepage' %}
+                <span class="active-indicator"></span>
+                {% endif %}
+            </a>
+            <a href="{{ path('app_vod') }}" class="hover:text-white transition-colors relative {% if app.request.attributes.get('_route') == 'app_vod' %}active-nav{% endif %}">
+                Vidéos
+                {% if app.request.attributes.get('_route') == 'app_vod' %}
+                <span class="active-indicator"></span>
+                {% endif %}
+            </a>
+            <a href="{{ path('app_shows') }}" class="hover:text-white transition-colors relative {% if app.request.attributes.get('_route') == 'app_shows' %}active-nav{% endif %}">
+                Émissions
+                {% if app.request.attributes.get('_route') == 'app_shows' %}
+                <span class="active-indicator"></span>
+                {% endif %}
+            </a>
+            <a href="{{ path('article_index') }}" class="hover:text-white transition-colors relative {% if app.request.attributes.get('_route') == 'article_index' %}active-nav{% endif %}">
+                Articles
+                {% if app.request.attributes.get('_route') == 'article_index' %}
+                <span class="active-indicator"></span>
+                {% endif %}
+            </a>
+            <a href="{{ path('app_live') }}" class="hover:text-white transition-colors relative {% if app.request.attributes.get('_route') == 'app_live' %}active-nav{% endif %}">
+                Live
+                {% if app.request.attributes.get('_route') == 'app_live' %}
+                <span class="active-indicator"></span>
+                {% endif %}
+            </a>
+            <a href="{{ path('app_project_submission') }}" class="hover:text-white transition-colors relative {% if app.request.attributes.get('_route') == 'app_project_submission' %}active-nav{% endif %}">
+                Contribution
+                {% if app.request.attributes.get('_route') == 'app_project_submission' %}
+                <span class="active-indicator"></span>
+                {% endif %}
+            </a>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <!-- Bouton réseaux sociaux - Desktop -->
+            <div class="relative group hidden md:block">
+                <div id="social-icon-rotator" class="w-8 h-8 glass-effect rounded-md flex items-center justify-center cursor-pointer social-container">
+                    <i class="ri-facebook-fill social-icon absolute"></i>
+                    <i class="ri-instagram-line social-icon absolute opacity-0"></i>
+                    <i class="ri-linkedin-fill social-icon absolute opacity-0"></i>
+                    <i class="ri-tiktok-fill social-icon absolute opacity-0"></i>
+                    <i class="ri-youtube-fill social-icon absolute opacity-0"></i>
+                </div>
+                
+                <div class="absolute right-0 mt-2 w-48 glass-effect rounded-lg shadow-lg py-2 invisible group-hover:visible transition-all">
+                    <a href="https://www.facebook.com/profile.php?id=100008928720113&mibextid=wwXIfr" target="_blank" class="flex items-center px-4 py-2 hover:bg-white/10">
+                        <i class="ri-facebook-fill mr-3 text-blue-400"></i> Facebook
+                    </a>
+                    <a href="https://instagram.com/dsntv" target="_blank" class="flex items-center px-4 py-2 hover:bg-white/10">
+                        <i class="ri-instagram-line mr-3 text-pink-400"></i> Instagram
+                    </a>
+                    <a href="https://www.linkedin.com/in/dsntv-diaspora-2a993b162/" target="_blank" class="flex items-center px-4 py-2 hover:bg-white/10">
+                        <i class="ri-linkedin-fill mr-3 text-blue-500"></i> LinkedIn
+                    </a>
+                    <a href="https://tiktok.com/@dsntv" target="_blank" class="flex items-center px-4 py-2 hover:bg-white/10">
+                        <i class="ri-tiktok-fill mr-3"></i> TikTok
+                    </a>
+                    <a href="https://www.youtube.com/@dsntv1839" target="_blank" class="flex items-center px-4 py-2 hover:bg-white/10">
+                        <i class="ri-youtube-fill mr-3 text-red-500"></i> YouTube
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Bouton réseaux sociaux - Mobile -->
+            <div class="relative md:hidden">
+                <div id="social-icon-mobile" class="w-8 h-8 glass-effect rounded-md flex items-center justify-center cursor-pointer social-container-mobile">
+                    <i class="ri-facebook-fill social-icon-mobile absolute"></i>
+                    <i class="ri-instagram-line social-icon-mobile absolute opacity-0"></i>
+                    <i class="ri-linkedin-fill social-icon-mobile absolute opacity-0"></i>
+                    <i class="ri-tiktok-fill social-icon-mobile absolute opacity-0"></i>
+                    <i class="ri-youtube-fill social-icon-mobile absolute opacity-0"></i>
+                </div>
+            </div>
+            
+            {% if app.user %}
+                <div class="relative group hidden md:block">
+                    <div class="flex items-center gap-2 cursor-pointer">
+                        <img src="{{ app.user.avatarUrl ?? '/api/placeholder/40/40' }}" alt="Avatar" class="w-8 h-8 rounded-full">
+                        <span>{{ app.user.displayName ?? app.user.email }}</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    
+                    <div class="absolute right-0 mt-2 w-48 glass-effect rounded-lg shadow-lg py-2 invisible group-hover:visible transition-all">
+                        <a href="{{ path('app_account_profile') }}" class="block px-4 py-2 hover:bg-white/10">
+                            <i class="ri-user-line mr-2"></i> Mon profil
+                        </a>
+                        <a href="{{ path('app_account_favorites') }}" class="block px-4 py-2 hover:bg-white/10">
+                            <i class="ri-heart-line mr-2"></i> Mes favoris
+                        </a>
+                        <a href="{{ path('app_account_history') }}" class="block px-4 py-2 hover:bg-white/10">
+                            <i class="ri-history-line mr-2"></i> Historique
+                        </a>
+                        <a href="{{ path('app_account_settings') }}" class="block px-4 py-2 hover:bg-white/10">
+                            <i class="ri-settings-line mr-2"></i> Paramètres
+                        </a>
+                        <a href="{{ path('app_my_projects') }}" class="block px-4 py-2 hover:bg-white/10">
+                            <i class="ri-folder-line mr-2"></i> Mes projets
+                        </a>
+                        
+                        {% if is_granted('ROLE_REDACTOR') or is_granted('ROLE_ADMIN') %}
+                            <div class="border-t border-white/10 my-1"></div>
+                            <a href="{{ path('redactor_dashboard') }}" class="block px-4 py-2 hover:bg-white/10 text-blue-400">
+                                <i class="ri-edit-2-line mr-1"></i> Rédaction
+                            </a>
+                        {% endif %}
+                        
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('admin_project_submissions') }}" class="block px-4 py-2 hover:bg-white/10">
+                                <i class="ri-settings-4-line mr-2"></i> Administration des projets
+                             </a>
+                        {% endif %}
+                        
+                        <div class="border-t border-white/10 my-1"></div>
+                        <a href="{{ path('app_logout') }}" class="block px-4 py-2 hover:bg-white/10 text-red-400">
+                            <i class="ri-logout-box-line mr-2"></i> Déconnexion
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="hidden md:block glass-effect px-4 py-2 rounded-full hover:bg-white/10 transition-colors">Connexion</a>
+            {% endif %}
+            
+            <!-- Bouton du menu mobile -->
+            <button id="mobile-menu-button" class="md:hidden flex items-center justify-center w-10 h-10 rounded-full glass-effect z-50 relative">
+                <div class="burger-icon w-6 h-6 relative">
+                    <span class="burger-line absolute top-1 w-6 h-0.5 bg-white transform transition-all duration-300 ease-in-out"></span>
+                    <span class="burger-line absolute top-3 w-6 h-0.5 bg-white transform transition-all duration-300 ease-in-out"></span>
+                    <span class="burger-line absolute top-5 w-6 h-0.5 bg-white transform transition-all duration-300 ease-in-out"></span>
+                </div>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Dropdown pour les réseaux sociaux en mobile -->
+<div id="social-dropdown" class="fixed top-16 right-16 w-48 glass-effect rounded-lg shadow-lg py-2 opacity-0 pointer-events-none transition-all z-50">
+    <a href="https://www.facebook.com/profile.php?id=100008928720113&mibextid=wwXIfrhttps://www.facebook.com/profile.php?id=100008928720113&mibextid=wwXIfr" target="_blank" class="flex items-center px-4 py-2 hover:bg-white/10">
+        <i class="ri-facebook-fill mr-3 text-blue-400"></i> Facebook
+    </a>
+    <a href="https://instagram.com/dsntv" target="_blank" class="flex items-center px-4 py-2 hover:bg-white/10">
+        <i class="ri-instagram-line mr-3 text-pink-400"></i> Instagram
+    </a>
+    <a href="https://www.linkedin.com/in/dsntv-diaspora-2a993b162/" target="_blank" class="flex items-center px-4 py-2 hover:bg-white/10">
+        <i class="ri-linkedin-fill mr-3 text-blue-500"></i> LinkedIn
+    </a>
+    <a href="https://tiktok.com/@dsntv" target="_blank" class="flex items-center px-4 py-2 hover:bg-white/10">
+        <i class="ri-tiktok-fill mr-3"></i> TikTok
+    </a>
+    <a href="https://www.youtube.com/@dsntv1839" target="_blank" class="flex items-center px-4 py-2 hover:bg-white/10">
+    <i class="ri-youtube-fill mr-3 text-red-500"></i> YouTube
+    </a>
+</div>
+
+<!-- Menu mobile -->
+<div id="mobile-menu" class="fixed top-0 right-0 h-full w-0 bg-gray-900/95 backdrop-blur-lg shadow-2xl z-40 overflow-hidden transition-all duration-300 ease-in-out">
+    <div class="mobile-menu-content h-full w-full p-6 pt-20 overflow-y-auto opacity-0 transition-opacity duration-300 ease-in-out">
+        <!-- Profile section -->
+        {% if app.user %}
+            <div class="flex items-center p-4 mb-6 glass-effect rounded-xl">
+                <img src="{{ app.user.avatarUrl ?? '/api/placeholder/40/40' }}" alt="Avatar" class="w-12 h-12 rounded-full">
+                <div class="ml-4">
+                    <p class="font-medium text-lg">{{ app.user.displayName ?? app.user.email }}</p>
+                    <p class="text-white/60 text-sm">Membre</p>
+                </div>
+            </div>
+        {% endif %}
+        
+        <!-- Navigation links -->
+        <nav class="mb-8 border-b border-white/10 pb-6">
+            <h3 class="text-white/50 text-xs font-medium uppercase tracking-wider mb-4">Menu</h3>
+            <ul class="space-y-1">
+                <li>
+                    <a href="{{ path('app_homepage') }}" class="mobile-menu-item">
+                        <i class="ri-home-line text-xl"></i>
+                        <span>Accueil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_vod') }}" class="mobile-menu-item">
+                        <i class="ri-video-line text-xl"></i>
+                        <span>Vidéos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_shows') }}" class="mobile-menu-item">
+                        <i class="ri-tv-line text-xl"></i>
+                        <span>Émissions</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('article_index') }}" class="mobile-menu-item">
+                        <i class="ri-article-line text-xl"></i>
+                        <span>Articles</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_live') }}" class="mobile-menu-item">
+                        <i class="ri-live-line text-xl"></i>
+                        <span>Live</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_project_submission') }}" class="mobile-menu-item">
+                        <i class="ri-mic-line text-xl"></i>
+                        <span>Contribution</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Réseaux sociaux section - Mobile -->
+        <div class="mb-8 border-b border-white/10 pb-6">
+            <h3 class="text-white/50 text-xs font-medium uppercase tracking-wider mb-4">Suivez-nous</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <a href="https://www.facebook.com/profile.php?id=100008928720113&mibextid=wwXIfrhttps://www.facebook.com/profile.php?id=100008928720113&mibextid=wwXIfr" target="_blank" class="mobile-menu-item">
+                    <i class="ri-facebook-fill text-xl text-blue-400"></i>
+                    <span>Facebook</span>
+                </a>
+                <a href="https://instagram.com/dsntv" target="_blank" class="mobile-menu-item">
+                    <i class="ri-instagram-line text-xl text-pink-400"></i>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://www.linkedin.com/in/dsntv-diaspora-2a993b162/" target="_blank" class="mobile-menu-item">
+                    <i class="ri-linkedin-fill text-xl text-blue-500"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://tiktok.com/@dsntv" target="_blank" class="mobile-menu-item">
+                    <i class="ri-tiktok-fill text-xl"></i>
+                    <span>TikTok</span>
+                </a>
+                <a href="https://www.youtube.com/@dsntv1839" target="_blank" class="mobile-menu-item">
+                    <i class="ri-youtube-fill text-xl text-red-500"></i>
+                    <span>YouTube</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Account links for logged in users -->
+        {% if app.user %}
+            <div class="mb-8 border-b border-white/10 pb-6">
+                <h3 class="text-white/50 text-xs font-medium uppercase tracking-wider mb-4">Mon compte</h3>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="{{ path('app_account_profile') }}" class="mobile-menu-item">
+                            <i class="ri-user-line text-xl"></i>
+                            <span>Mon profil</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_account_favorites') }}" class="mobile-menu-item">
+                            <i class="ri-heart-line text-xl"></i>
+                            <span>Mes favoris</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_account_history') }}" class="mobile-menu-item">
+                            <i class="ri-history-line text-xl"></i>
+                            <span>Historique</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_account_settings') }}" class="mobile-menu-item">
+                            <i class="ri-settings-line text-xl"></i>
+                            <span>Paramètres</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_my_projects') }}" class="mobile-menu-item">
+                            <i class="ri-folder-line text-xl"></i>
+                            <span>Mes projets</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Admin links -->
+            {% if is_granted('ROLE_REDACTOR') or is_granted('ROLE_ADMIN') %}
+                <div class="mb-8 border-b border-white/10 pb-6">
+                    <h3 class="text-white/50 text-xs font-medium uppercase tracking-wider mb-4">Administration</h3>
+                    <ul class="space-y-1">
+                        {% if is_granted('ROLE_REDACTOR') or is_granted('ROLE_ADMIN') %}
+                            <li>
+                                <a href="{{ path('redactor_dashboard') }}" class="mobile-menu-item text-blue-400">
+                                    <i class="ri-edit-2-line text-xl"></i>
+                                    <span>Rédaction</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li>
+                                <a href="{{ path('admin_project_submissions') }}" class="mobile-menu-item">
+                                    <i class="ri-settings-4-line text-xl"></i>
+                                    <span>Administration des projets</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <!-- Logout button -->
+            <a href="{{ path('app_logout') }}" class="flex items-center gap-3 w-full p-3 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all">
+                <i class="ri-logout-box-line text-xl"></i>
+                <span>Déconnexion</span>
+            </a>
+        {% else %}
+            <!-- Login button for logged out users -->
+            <a href="{{ path('app_login') }}" class="flex items-center justify-center gap-2 w-full p-3 glass-effect rounded-lg hover:bg-white/10 transition-all">
+                <i class="ri-login-box-line"></i>
+                <span>Connexion</span>
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+/* Styles pour l'indicateur de page active */
+.active-nav {
+    font-weight: 500;
+    color: white;
+    position: relative;
+}
+
+.active-indicator {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 2px;
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(255, 126, 95, 0.6);
+}
+
+/* Animation facultative pour l'indicateur */
+@keyframes glow {
+    0% { box-shadow: 0 0 5px rgba(255, 126, 95, 0.5); }
+    50% { box-shadow: 0 0 12px rgba(255, 126, 95, 0.8); }
+    100% { box-shadow: 0 0 5px rgba(255, 126, 95, 0.5); }
+}
+
+.active-indicator {
+    animation: glow 2s infinite ease-in-out;
+}
+
+/* Style pour les items du menu mobile */
+.mobile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.mobile-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Animation pour le bouton burger quand activé */
+#mobile-menu-button.active .burger-icon .burger-line:nth-child(1) {
+    top: 12px;
+    transform: rotate(45deg);
+    background-color: #ef4444; /* Rouge */
+}
+
+#mobile-menu-button.active .burger-icon .burger-line:nth-child(2) {
+    opacity: 0;
+}
+
+#mobile-menu-button.active .burger-icon .burger-line:nth-child(3) {
+    top: 12px;
+    transform: rotate(-45deg);
+    background-color: #ef4444; /* Rouge */
+}
+
+/* État actif du menu mobile */
+#mobile-menu.active {
+    width: 85%; /* Ou une largeur spécifique comme 300px */
+}
+
+#mobile-menu.active .mobile-menu-content {
+    opacity: 1;
+}
+
+/* Fixe le bouton lors de l'ouverture du menu */
+#mobile-menu-button.fixed-position {
+    position: fixed;
+    right: 16px;
+    top: 16px;
+}
+
+/* Overlay pour fermer le menu en cliquant à l'extérieur */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Effet de rebond subtil lors de l'ouverture */
+@keyframes slideInRight {
+    0% { transform: translateX(100%); }
+    70% { transform: translateX(-5%); }
+    100% { transform: translateX(0); }
+}
+
+#mobile-menu.active .mobile-menu-content {
+    animation: slideInRight 0.5s forwards;
+}
+
+/* Styles pour l'animation des icônes sociales */
+.social-icon {
+    transition: opacity 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+#social-icon-rotator {
+    animation: pulse 2s infinite ease-in-out;
+    box-shadow: 0 0 8px rgba(255, 126, 95, 0.3);
+    overflow: hidden;
+}
+
+#social-icon-rotator:hover {
+    animation-play-state: paused;
+    box-shadow: 0 0 12px rgba(255, 126, 95, 0.6);
+}
+
+/* Styles pour l'encadrement des icônes sociales avec effet plus visible */
+.social-container {
+    box-shadow: 0 0 10px 2px rgba(255, 126, 95, 0.5);
+    border: 1px solid rgba(255, 126, 95, 0.3);
+    transition: all 0.3s ease;
+}
+
+.social-container:hover {
+    box-shadow: 0 0 15px 3px rgba(255, 126, 95, 0.8);
+    border: 1px solid rgba(255, 126, 95, 0.6);
+}
+
+.social-container-mobile {
+    box-shadow: 0 0 10px 2px rgba(225, 48, 108, 0.6); /* Couleur Instagram */
+    border: 1px solid rgba(225, 48, 108, 0.4);
+    transition: all 0.3s ease;
+}
+
+.social-container-mobile:hover {
+    box-shadow: 0 0 15px 3px rgba(225, 48, 108, 0.9);
+    border: 1px solid rgba(225, 48, 108, 0.7);
+}
+
+/* Animation pour le dropdown des réseaux sociaux sur mobile */
+#social-dropdown.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+#social-dropdown {
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+
+/* Styles pour l'animation des icônes sociales mobiles */
+.social-icon-mobile {
+    transition: opacity 0.6s ease-in-out;
+}
+
+#social-icon-mobile {
+    animation: pulse 2s infinite ease-in-out;
+    overflow: hidden;
+}
+
+#social-icon-mobile:hover {
+    animation-play-state: paused;
+}
+
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let isMenuOpen = false;
+    
+    // Créer l'overlay
+    const overlay = document.createElement('div');
+    overlay.classList.add('menu-overlay');
+    document.body.appendChild(overlay);
+    
+    // Fonction pour ouvrir le menu
+    function openMenu() {
+        isMenuOpen = true;
+        mobileMenu.classList.add('active');
+        mobileMenuButton.classList.add('active', 'fixed-position');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Empêcher le défilement
+    }
+    
+    // Fonction pour fermer le menu
+    function closeMenu() {
+        isMenuOpen = false;
+        mobileMenu.classList.remove('active');
+        mobileMenuButton.classList.remove('active', 'fixed-position');
+        overlay.classList.remove('active');
+        document.body.style.overflow = ''; // Autoriser le défilement
+    }
+    
+    // Ouvrir/fermer le menu au clic sur le bouton
+    mobileMenuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (isMenuOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+    
+    // Fermer le menu si on clique en dehors
+    overlay.addEventListener('click', closeMenu);
+    
+    // Fermer le menu si on clique sur un lien
+    const mobileMenuItems = document.querySelectorAll('.mobile-menu-item');
+    mobileMenuItems.forEach(item => {
+        item.addEventListener('click', closeMenu);
+    });
+    
+    // Gérer le redimensionnement de la fenêtre
+    window.addEventListener('resize', function() {
+        // Si écran devient >= md breakpoint de Tailwind (768px) et menu ouvert
+        if (window.innerWidth >= 768 && isMenuOpen) {
+            closeMenu();
+        }
+    });
+    
+    // Animation de rotation des icônes sociales desktop
+    const socialIcons = document.querySelectorAll('.social-icon');
+    const socialIconsMobile = document.querySelectorAll('.social-icon-mobile');
+    let currentIconIndex = 0;
+
+    function rotateSocialIcons() {
+        // Pour desktop
+        socialIcons.forEach((icon, index) => {
+            if (index === currentIconIndex) {
+                icon.style.opacity = '1';
+            } else {
+                icon.style.opacity = '0';
+            }
+        });
+        
+        // Pour mobile
+        socialIconsMobile.forEach((icon, index) => {
+            if (index === currentIconIndex) {
+                icon.style.opacity = '1';
+            } else {
+                icon.style.opacity = '0';
+            }
+        });
+        
+        currentIconIndex = (currentIconIndex + 1) % socialIcons.length;
+    }
+
+    // Initialiser la première icône
+    rotateSocialIcons();
+
+    // Rotation toutes les 2 secondes
+    setInterval(rotateSocialIcons, 2000);
+    
+    // Gestion du menu des réseaux sociaux sur mobile
+    const socialIconMobile = document.getElementById('social-icon-mobile');
+    const socialDropdown = document.getElementById('social-dropdown');
+    let isSocialMenuOpen = false;
+    
+    socialIconMobile.addEventListener('click', function(e) {
+        e.stopPropagation();
+        isSocialMenuOpen = !isSocialMenuOpen;
+        
+        if (isSocialMenuOpen) {
+            socialDropdown.classList.add('active');
+        } else {
+            socialDropdown.classList.remove('active');
+        }
+    });
+    
+    // Fermer le menu social si on clique ailleurs
+    document.addEventListener('click', function() {
+        if (isSocialMenuOpen) {
+            socialDropdown.classList.remove('active');
+            isSocialMenuOpen = false;
+        }
+    });
+});
+</script>

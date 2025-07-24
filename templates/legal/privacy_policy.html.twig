@@ -1,0 +1,374 @@
+{# templates/legal/privacy_policy.html.twig #}
+{% extends 'legal/base_legal.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Styles pour la page politique de confidentialité */
+        .legal-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: var(--card-bg, #1e1e1e);
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .legal-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .legal-header:after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color, #00bf7f), var(--secondary-color, #fcd116));
+        }
+
+        .legal-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-color, #e0e0e0);
+        }
+
+        .legal-content section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--primary-color, #00bf7f);
+            transition: transform 0.3s ease;
+        }
+
+        .legal-content section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .legal-content h2 {
+            color: var(--secondary-color, #fcd116);
+            font-size: 1.4rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .legal-content h3 {
+            color: var(--primary-color, #00bf7f);
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .legal-content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: var(--text-color, #e0e0e0);
+        }
+
+        .legal-content ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .legal-content li {
+            margin-bottom: 0.75rem;
+            position: relative;
+            padding-left: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .legal-content li:before {
+            content: "•";
+            color: var(--primary-color, #00bf7f);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .legal-content li strong {
+            color: var(--secondary-color, #fcd116);
+            font-weight: 600;
+        }
+
+        .legal-content a {
+            color: var(--primary-color, #00bf7f);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .legal-content a:hover {
+            color: var(--secondary-color, #fcd116);
+        }
+
+        .legal-content a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--secondary-color, #fcd116);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .legal-content a:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .privacy-highlight {
+            background-color: rgba(var(--primary-color-rgb, 0, 191, 127), 0.1);
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 3px solid var(--primary-color, #00bf7f);
+        }
+
+        .privacy-highlight p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Table des matières */
+        .toc {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 3px solid var(--secondary-color, #fcd116);
+        }
+        
+        .toc h3 {
+            margin-top: 0 !important;
+            margin-bottom: 1rem !important;
+            color: var(--secondary-color, #fcd116) !important;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .toc li {
+            margin-bottom: 0.5rem;
+            padding-left: 0;
+        }
+        
+        .toc li:before {
+            display: none;
+        }
+        
+        .toc a {
+            display: block;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
+        }
+        
+        .toc a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+
+        .legal-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: var(--text-muted, #9e9e9e);
+        }
+        
+        /* Effet de navigation par ancre */
+        :target {
+            animation: highlight 2s ease;
+        }
+        
+        @keyframes highlight {
+            0% { background-color: rgba(var(--primary-color-rgb, 0, 191, 127), 0.2); }
+            100% { background-color: rgba(255, 255, 255, 0.02); }
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Politique de confidentialité | {{ parent() }}{% endblock %}
+
+{% block legal_content %}
+<div class="legal-container">
+    <header class="legal-header">
+        <h1>{% block legal_title %}Politique de confidentialité{% endblock %}</h1>
+        <p>Comment nous protégeons vos données et respectons votre vie privée</p>
+    </header>
+
+    <div class="legal-content">
+        <!-- Table des matières -->
+        <div class="toc">
+            <h3>Sommaire</h3>
+            <ul>
+                <li><a href="#section1">Collecte des données personnelles</a></li>
+                <li><a href="#section2">Finalités du traitement</a></li>
+                <li><a href="#section3">Base légale du traitement</a></li>
+                <li><a href="#section4">Destinataires des données</a></li>
+                <li><a href="#section5">Durée de conservation</a></li>
+                <li><a href="#section6">Droits des personnes</a></li>
+                <li><a href="#section7">Cookies</a></li>
+                <li><a href="#section8">Transferts de données hors UE</a></li>
+                <li><a href="#section9">Modifications de la politique</a></li>
+            </ul>
+        </div>
+
+        <div class="privacy-highlight">
+            <p><strong>Aperçu rapide :</strong> Nous collectons uniquement les données nécessaires pour vous offrir nos services, les protégeons avec soin et vous donnons un contrôle total sur vos informations.</p>
+        </div>
+
+        <section id="section1">
+            <h2>Collecte des données personnelles</h2>
+            <p>
+                Dans le cadre de l'utilisation du Site, {{ company_name }} peut être amenée à collecter et traiter les données à caractère personnel suivantes :
+            </p>
+            <ul>
+                {% for data_type in collected_data_types %}
+                <li>{{ data_type }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section id="section2">
+            <h2>Finalités du traitement</h2>
+            <p>
+                Les données collectées sont utilisées pour :
+            </p>
+            <ul>
+                {% for purpose in data_purposes %}
+                <li>{{ purpose }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section id="section3">
+            <h2>Base légale du traitement</h2>
+            <p>
+                Le traitement de vos données personnelles est justifié par :
+            </p>
+            <ul>
+                <li>L'exécution du contrat lorsque vous utilisez nos services</li>
+                <li>Votre consentement pour certains traitements spécifiques</li>
+                <li>Notre intérêt légitime à améliorer nos services et protéger notre plateforme</li>
+                <li>Le respect de nos obligations légales</li>
+            </ul>
+        </section>
+
+        <section id="section4">
+            <h2>Destinataires des données</h2>
+            <p>
+                Les données collectées sont destinées à {{ company_name }}. Elles peuvent être transmises aux prestataires auxquels {{ company_name }} fait appel pour la gestion de ses services.
+            </p>
+        </section>
+
+        <section id="section5">
+            <h2>Durée de conservation</h2>
+            <p>
+                Conformément au Règlement Général sur la Protection des Données (RGPD), nous appliquons les durées de conservation suivantes pour vos données :
+            </p>
+            
+            <ul>
+                <li><strong>Données de compte</strong> : Vos informations de compte (nom, email, mot de passe crypté, etc.) sont conservées tant que votre compte est actif. En cas d'inactivité prolongée pendant plus de 3 ans, votre compte et les données associées seront automatiquement supprimés.</li>
+                
+                <li><strong>Historique de visionnage</strong> : Nous conservons votre historique de visionnage pendant une durée de 1 an à compter de la date de visionnage. Après cette période, ces données sont automatiquement supprimées.</li>
+                
+                <li><strong>Favoris</strong> : Vos favoris sont conservés tant que votre compte est actif. Ils seront supprimés en même temps que votre compte.</li>
+                
+                <li><strong>Commentaires</strong> : En cas de suppression de votre compte, les commentaires que vous avez publiés seront conservés mais anonymisés (votre nom et identifiant seront supprimés).</li>
+                
+                <li><strong>Likes</strong> : En cas de suppression de votre compte, vos likes seront supprimés.</li>
+                
+                <li><strong>Articles créés</strong> : Si vous avez contribué à des articles sur notre plateforme, le contenu sera préservé mais votre identité en tant qu'auteur sera supprimée lors de la suppression de votre compte.</li>
+            </ul>
+        </section>
+
+        <section id="section6">
+            <h2>Droits des personnes</h2>
+            <p>
+                Conformément à la réglementation applicable en matière de protection des données personnelles, vous disposez des droits suivants :
+            </p>
+            <ul>
+                <li>Droit d'accès à vos données</li>
+                <li>Droit de rectification</li>
+                <li>Droit à l'effacement (droit à l'oubli)</li>
+                <li>Droit à la limitation du traitement</li>
+                <li>Droit à la portabilité</li>
+                <li>Droit d'opposition</li>
+            </ul>
+            
+            <h3>Comment exercer vos droits</h3>
+            <p>
+                Pour exercer ces droits, vous pouvez :
+            </p>
+            <ul>
+                <li>Utiliser la fonction "Télécharger mes données" disponible dans les paramètres de votre compte pour obtenir une copie de vos données personnelles</li>
+                <li>Utiliser la fonction "Supprimer mon compte" dans les paramètres de votre compte pour exercer votre droit à l'effacement</li>
+                <li>Contacter notre Délégué à la Protection des Données à l'adresse suivante : <a href="mailto:{{ dpo_email }}">{{ dpo_email }}</a></li>
+            </ul>
+            
+            <h3>Suppression automatique des données</h3>
+            <p>
+                Conformément au RGPD, nous avons mis en place un système automatisé de suppression des données qui :
+            </p>
+            <ul>
+                <li>Supprime les historiques de visionnage datant de plus d'un an</li>
+                <li>Identifie et supprime les comptes inactifs depuis plus de 3 ans</li>
+                <li>Anonymise ou supprime les données associées aux comptes supprimés</li>
+            </ul>
+        </section>
+
+        <section id="section7">
+            <h2>Cookies</h2>
+            <p>
+                Notre Site utilise des cookies pour améliorer votre expérience utilisateur. Vous pouvez paramétrer vos préférences de cookies via notre bannière dédiée ou <a href="{{ path('app_cookie_policy') }}">en cliquant ici</a>
+            </p>
+            
+            <div class="privacy-highlight">
+                <p><strong>À propos des cookies :</strong> Nous utilisons principalement des cookies techniques essentiels au fonctionnement du site. Les cookies d'analyse et de publicité ne sont activés qu'avec votre consentement explicite.</p>
+            </div>
+        </section>
+
+        <section id="section8">
+            <h2>Transferts de données hors UE</h2>
+            <p>
+                {{ data_transfer_information }}
+            </p>
+        </section>
+
+        <section id="section9">
+            <h2>Modifications de la politique de confidentialité</h2>
+            <p>
+                {{ company_name }} se réserve le droit de modifier la présente politique de confidentialité à tout moment. La version en vigueur est celle publiée sur le Site.
+            </p>
+            <p>
+                En cas de modification substantielle, nous vous en informerons par email ou via une notification sur notre site avant l'entrée en vigueur des changements.
+            </p>
+        </section>
+    </div>
+
+    <footer class="legal-footer">
+        <p>Dernière mise à jour : {% block last_update %}23/04/2025{% endblock %}</p>
+        <p><a href="#" onclick="window.print(); return false;">Imprimer cette politique</a></p>
+    </footer>
+</div>
+{% endblock %}

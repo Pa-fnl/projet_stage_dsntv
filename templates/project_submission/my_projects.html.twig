@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes projets | DSNTV{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('my_project') }} 
+{% endblock %}
+
+{% block body %}
+
+<div class="container py-4">
+
+    <div class="page-header mb-4 text-center">
+
+        <div class="container">
+            <h1>Mes projets soumis</h1>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            {% if submissions|length > 0 %}
+                {% for submission in submissions %}
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3 class="project-title">{{ submission.projectTitle }}</h3>
+                            <span class="badge badge-{{ submission.status.value }}">
+                                {{ submission.status.label }}
+                            </span>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-info">
+                                <div class="info-item">
+                                    <span class="info-label">Type:</span>
+                                    <span class="info-value">
+                                        {% if submission.projectType == 'existing_show' %}
+                                            Participation à une émission
+                                        {% elseif submission.projectType == 'new_concept' %}
+                                            Nouveau concept d'émission
+                                        {% elseif submission.projectType == 'report' %}
+                                            Reportage ponctuel
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Soumis le:</span>
+                                    <span class="info-value">{{ submission.createdAt|date('d/m/Y') }}</span>
+                                </div>
+                                {% if submission.updatedAt != submission.createdAt %}
+                                    <div class="info-item">
+                                        <span class="info-label">Dernière mise à jour:</span>
+                                        <span class="info-value">{{ submission.updatedAt|date('d/m/Y') }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <a href="{{ path('app_project_submission_show', {'id': submission.id}) }}" class="btn btn-outline">Voir les détails</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <p class="empty-state-message">
+                        Vous n'avez pas encore soumis de projet.
+                    </p>
+                    <a href="{{ path('app_project_submission') }}" class="btn btn-primary">
+                        Soumettre votre premier projet
+                    </a>
+                </div>
+            {% endif %}
+            
+            {% if submissions|length > 0 %}
+                <div class="text-center mt-4">
+                    <a href="{{ path('app_project_submission') }}" class="btn btn-primary">
+                        Soumettre un nouveau projet
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

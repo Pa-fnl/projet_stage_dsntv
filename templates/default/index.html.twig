@@ -1,0 +1,214 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DSNTV - Accueil{% endblock %}
+
+{% block body %}
+<div class="space-y-16">
+
+<!-- Hero Section -->
+<section class="relative overflow-hidden rounded-3xl glass-effect">
+    <!-- Vidéo en fond - Sans gradient -->
+    <div id="video-container" class="absolute inset-0 w-full h-full z-0">
+        <video 
+            id="intro-video"
+            class="absolute inset-0 w-full h-full object-cover" 
+            autoplay 
+            muted 
+            playsinline>
+            <source src="{{ asset('videos/dsntv.mp4') }}" type="video/mp4">
+        </video>
+    </div>
+    
+    <!-- Contenu statique qui sera affiché après la vidéo - avec fond 3D -->
+    <div id="static-content" class="absolute inset-0 w-full h-full z-0 opacity-0 transition-opacity duration-1000">
+        <!-- Image 3D de fond -->
+        <div class="absolute inset-0 z-0 bg-cover bg-center" style="background-image: url('{{ asset('images/pexels-googledeepmind-17485710.jpg') }}');"></div>
+        
+        <!-- Gradient subtil par-dessus l'image pour améliorer la lisibilité du texte -->
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-900/60 to-orange-900/60 z-1"></div>
+    </div>
+    
+    <!-- Contenu texte - Caché au début, affiché après la vidéo -->
+    <div id="text-content" class="relative z-10 flex flex-col items-center justify-center min-h-[40vh] p-8 text-center opacity-0 transition-opacity duration-1000">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 animate-on-scroll">Bienvenue sur <span class="gradient-text">DSNTV</span></h1>
+        <p class="text-xl md:text-2xl max-w-3xl text-white/80 mb-8 animate-on-scroll">Découvrez notre sélection de vidéos, articles et live streams pour rester à la pointe de l'actualité.</p>
+        
+        <div class="flex flex-wrap gap-4 justify-center animate-on-scroll">
+            <a href="#latest-videos" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full font-medium hover:opacity-90 transition-opacity">
+                <i class="ri-video-line mr-2"></i> Dernières vidéos
+            </a>
+            <a href="#submit-project" class="px-6 py-3 glass-effect rounded-full font-medium hover:bg-white/10 transition-colors">
+                <i class="ri-lightbulb-line mr-2"></i> Soumettre un projet
+            </a>
+        </div>
+    </div>
+</section>
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('default') }}
+{% endblock %}
+
+
+    <!-- Latest Videos Section -->
+    <section id="latest-videos" class="animate-on-scroll">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold">Dernières vidéos</h2>
+            <a href="{{ path('app_vod') }}" class="text-white/70 hover:text-white flex items-center">
+                Voir tout <i class="ri-arrow-right-line ml-2"></i>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% if latestVideos is empty %}
+                <div class="glass-effect rounded-xl p-6 text-center col-span-3">
+                    <p>Aucune vidéo disponible pour le moment.</p>
+                </div>
+            {% else %}
+                {% for video in latestVideos %}
+                    <div class="glass-effect rounded-xl overflow-hidden group">
+                        <div class="relative aspect-video overflow-hidden">
+                            <img src="{{ video.thumbnailUrl }}" alt="{{ video.title }}" class="w-full h-full object-cover transition-transform group-hover:scale-105"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                            <button class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <i class="ri-play-fill text-3xl"></i>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold mb-2">{{ video.title }}</h3>
+                            <p class="text-white/70 text-sm mb-4">{{ video.category }}</p>
+                            <div class="flex justify-between text-sm text-white/50">
+                                <span>{{ video.publishedAt|date("d/m/Y") }}</span>
+                                <a href="{{ path('app_vod_show', {'id': video.id}) }}" class="hover:text-white">
+                                    Voir la vidéo <i class="ri-arrow-right-line ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Latest Shows Section -->
+    <section class="animate-on-scroll">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold">Dernières émissions</h2>
+            <a href="{{ path('app_shows') }}" class="text-white/70 hover:text-white flex items-center">
+                Voir tout <i class="ri-arrow-right-line ml-2"></i>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% if latestShows is empty %}
+                <div class="glass-effect rounded-xl p-6 text-center col-span-3">
+                    <p>Aucune émission disponible pour le moment.</p>
+                </div>
+            {% else %}
+                {% for show in latestShows %}
+                    <div class="glass-effect rounded-xl overflow-hidden group">
+                        <div class="relative aspect-video overflow-hidden">
+                            <img src="{{ show.thumbnailUrl }}" alt="{{ show.title }}" class="w-full h-full object-cover transition-transform group-hover:scale-105"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold mb-2">{{ show.title }}</h3>
+                            <p class="text-white/70 text-sm mb-4">{{ show.category }}</p>
+                            <div class="flex justify-between text-sm text-white/50">
+                                <span>{{ show.videos|length }} épisodes</span>
+                                <a href="{{ path('app_shows_detail', {'id': show.id}) }}" class="hover:text-white">
+                                    Voir l'émission <i class="ri-arrow-right-line ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Latest Articles Section -->
+    <section class="animate-on-scroll">
+        {{ render(controller('App\\Controller\\ArticleController::latestArticles')) }}
+    </section>
+
+    <section class="rounded-xl bg-gray-900/50 overflow-hidden p-8">
+        <h2 class="text-2xl font-bold mb-6">Retrouvez-nous en live</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Dernier live (rediffusions) -->
+            <div class="bg-gray-800/40 rounded-lg p-5 flex flex-col h-full">
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <i class="ri-video-line text-red-500 mr-2"></i>
+                Notre dernier live
+            </h3>
+            <p class="text-white/70 mb-4">Vous avez manqué notre dernier stream ? Retrouvez la rediffusion et tous nos contenus passés sur notre chaîne.</p>
+            <div class="mt-auto">
+                <a href="https://www.twitch.tv/votre_chaine/videos" target="_blank" class="bg-purple-700 hover:bg-purple-600 text-white px-4 py-3 rounded-lg inline-flex items-center">
+                <i class="ri-twitch-fill mr-2 text-lg"></i> Voir les rediffusions
+                </a>
+            </div>
+            </div>
+            
+            <!-- Suivez-nous sur les réseaux -->
+            <div class="bg-gray-800/40 rounded-lg p-5 flex flex-col h-full">
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <i class="ri-notification-3-line text-blue-400 mr-2"></i>
+                Bientôt en live ?
+            </h3>
+            <p class="text-white/70 mb-4">Suivez-nous sur nos réseaux pour être notifié des prohaines News.</p>
+            
+            <div class="grid grid-cols-2 gap-3 mt-auto">
+                <a href="https://twitch.tv/votre_chaine" target="_blank" class="bg-purple-700/70 hover:bg-purple-700 rounded-lg p-3 text-center transition-all">
+                <i class="ri-twitch-fill text-xl"></i>
+                <p class="font-medium mt-1">Twitch</p>
+                </a>
+                <a href="https://twitter.com/votre_compte" target="_blank" class="bg-gray-700/70 hover:bg-gray-700 rounded-lg p-3 text-center transition-all">
+                <i class="ri-twitter-x-fill text-xl"></i>
+                <p class="font-medium mt-1">Twitter</p>
+                </a>
+                <a href="https://discord.gg/votre_serveur" target="_blank" class="bg-indigo-700/70 hover:bg-indigo-700 rounded-lg p-3 text-center transition-all">
+                <i class="ri-discord-fill text-xl"></i>
+                <p class="font-medium mt-1">Discord</p>
+                </a>
+                <a href="https://instagram.com/votre_compte" target="_blank" class="bg-pink-700/70 hover:bg-pink-700 rounded-lg p-3 text-center transition-all">
+                <i class="ri-instagram-fill text-xl"></i>
+                <p class="font-medium mt-1">Instagram</p>
+                </a>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Submit Project Section -->
+    <section id="submit-project" class="animate-on-scroll glass-effect rounded-3xl p-8">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+            <!-- Colonne de gauche avec l'image -->
+            <div class="md:w-1/3 flex justify-center md:justify-start mb-6 md:mb-0">
+                <img src="{{ asset('images/miniat_project_3.png') }}" alt="Proposez votre projet" class="w-64 h-auto rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
+            </div>
+            
+            <!-- Colonne de droite avec le texte et le bouton -->
+            <div class="md:w-2/3 text-center md:text-right">
+                <h2 class="text-2xl font-bold mb-3 text-white">Soumettez votre projet</h2>
+                <p class="text-gray-300 mb-6">
+                    Vous avez un projet innovant que vous souhaitez partager ? Soumettez-le dès maintenant
+                    pour avoir une chance d'être présenté dans l'une de nos émissions.
+                </p>
+                <a href="{{ path('app_project_submission') }}" class="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold transition-all hover:shadow-lg hover:from-purple-600 hover:to-blue-600">
+                    <i class="ri-send-plane-fill mr-2"></i> Soumettre un projet
+                </a>
+            </div>
+        </div>
+        
+        <!-- Éléments décoratifs subtils en arrière-plan -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+            <div class="absolute top-5 left-10 w-16 h-16 rounded-full bg-purple-500"></div>
+            <div class="absolute bottom-10 right-5 w-10 h-10 rounded-full bg-yellow-400"></div>
+            <div class="absolute bottom-20 left-20 w-8 h-8 rounded-full bg-teal-400"></div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DSNTV{% endblock %}</title>
+
+    {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Remixicon pur les Icons  -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- Quelques styles personnalisés -->
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #f0f0f0;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+    </style>
+    {% endblock %}
+    {% block analytics %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (document.cookie.indexOf('cookie_analytics=true') !== -1) {
+            var gaScript = document.createElement('script');
+            gaScript.setAttribute('async', '');
+            gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-11FPBHC32T";
+            document.head.appendChild(gaScript);
+
+            // Petit délai pour que le script soit chargé
+            setTimeout(function () {
+                window.dataLayer = window.dataLayer || [];
+                function gtag() { dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-11FPBHC32T');
+            }, 300);
+            }
+        });
+    </script>
+    {% endblock %}
+</head>
+
+{% include 'partials/navbar.html.twig' %}
+
+<body class="text-white min-h-screen flex flex-col">
+
+
+    <!-- Flash messages -->
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="max-w-lg mx-auto mt-4 glass-effect rounded-lg p-4 {% if label == 'success' %}border-l-4 border-green-500{% elseif label == 'error' %}border-l-4 border-red-500{% else %}border-l-4 border-blue-500{% endif %}">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        {% if label == 'success' %}
+                            <i class="ri-checkbox-circle-line text-green-500 text-xl"></i>
+                        {% elseif label == 'error' %}
+                            <i class="ri-error-warning-line text-red-500 text-xl"></i>
+                        {% else %}
+                            <i class="ri-information-line text-blue-500 text-xl"></i>
+                        {% endif %}
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm">{{ message }}</p>
+                    </div>
+                    <button type="button" class="ml-auto text-white/60 hover:text-white" onclick="this.parentElement.parentElement.remove()">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <!-- Main content -->
+    <div class="container mx-auto px-4 py-8">
+        {% block body %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+
+    {% include 'partials/footer.html.twig' %}
+
+    <!-- Picture-in-Picture Twitch Player -->
+    <div id="pip-twitch-player" class="fixed bottom-4 right-4 z-50 rounded-lg shadow-lg overflow-hidden" style="width: 380px; height: 220px; display: none;">
+        <div id="pip-twitch-embed"></div>
+        <div class="absolute top-1 right-1 flex gap-2">
+            <button id="pip-maximize" class="bg-gray-800/80 text-white p-1 rounded hover:bg-gray-700/80 transition-colors">
+                <i class="ri-fullscreen-line text-sm"></i>
+            </button>
+            <button id="pip-close" class="bg-gray-800/80 text-white p-1 rounded hover:bg-red-500/80 transition-colors">
+                <i class="ri-close-line text-sm"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Live Button -->
+    <button id="toggle-pip-player" class="fixed top-20 right-4 z-50 bg-gray-700 text-white rounded-full py-2 px-4 flex items-center gap-2 hover:bg-gray-600 transition-colors shadow-lg">
+        <span id="live-indicator" class="relative flex h-3 w-3">
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-gray-400"></span>
+        </span>
+        <span id="live-text">DIRECT</span>
+    </button>
+
+    {# Bannière de cookies #}
+<!-- Bannière de consentement des cookies moderne -->
+<div id="cookie-consent-popup" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 10000; padding: 20px; background: rgba(23, 25, 35, 0.95); backdrop-filter: blur(10px); color: white; transform: translateY(100%); opacity: 0; transition: all 0.5s ease; box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+    
+    <!-- Vue simple -->
+    <div id="cookie-consent-simple" style="max-width: 1200px; margin: 0 auto;">
+        <div style="display: flex; align-items: flex-start; gap: 30px;">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"></path><path d="M8.5 8.5v.01"></path><path d="M16 15.5v.01"></path><path d="M12 12v.01"></path></svg>
+                    <h3 style="margin: 0; font-size: 20px; font-weight: 600;">Paramètres de confidentialité</h3>
+                </div>
+                <p style="margin-top: 5px; margin-bottom: 15px; line-height: 1.5; font-size: 15px;">
+                    Nous utilisons des cookies pour améliorer votre expérience sur notre site, personnaliser le contenu et proposer des fonctionnalités de médias sociaux. Certains cookies sont nécessaires au fonctionnement du site, tandis que d'autres nous aident à comprendre comment vous l'utilisez (cookies analytiques) ou permettent d'afficher du contenu personnalisé (cookies marketing).
+                </p>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <button id="customize-cookies" style="padding: 10px 20px; background: transparent; color: white; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; font-size: 14px;">Personnaliser</button>
+                <button id="accept-all-cookies" style="padding: 10px 20px; background: #3482F6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 14px; box-shadow: 0 2px 10px rgba(52, 130, 246, 0.3);">Tout accepter</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Vue détaillée -->
+    <div id="cookie-consent-detailed" style="max-width: 1200px; margin: 0 auto; display: none;">
+        <div style="margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"></path><path d="M8.5 8.5v.01"></path><path d="M16 15.5v.01"></path><path d="M12 12v.01"></path></svg>
+                <h3 style="margin: 0; font-size: 20px; font-weight: 600;">Personnaliser vos préférences de cookies</h3>
+            </div>
+            <p style="margin-top: 5px; line-height: 1.5; font-size: 15px;">
+                Sélectionnez les catégories de cookies que vous acceptez sur notre site.
+            </p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px;">
+            <!-- Cookies essentiels -->
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Cookies essentiels</h4>
+                        <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.8;">
+                            Nécessaires au fonctionnement du site
+                        </p>
+                    </div>
+                    <div style="position: relative; display: inline-block; width: 40px; height: 20px; background: rgba(52, 130, 246, 0.5); border-radius: 20px; pointer-events: none;">
+                        <span style="position: absolute; left: 20px; top: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: left 0.3s;"></span>
+                        <input type="checkbox" checked disabled style="opacity: 0; width: 0; height: 0;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cookies fonctionnels -->
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Cookies fonctionnels</h4>
+                        <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.8;">
+                            Pour la connexion avec Google
+                        </p>
+                    </div>
+                    <label class="toggle-switch" style="position: relative; display: inline-block; width: 40px; height: 20px; background: #e5e5e5; border-radius: 20px; cursor: pointer;">
+                        <input type="checkbox" id="functional-checkbox" style="position: absolute; opacity: 0; width: 0; height: 0;">
+                        <span class="toggle-slider" style="position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: left 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3);"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Cookies analytiques -->
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Cookies analytiques</h4>
+                        <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.8;">
+                            Pour améliorer notre site
+                        </p>
+                    </div>
+                    <label class="toggle-switch" style="position: relative; display: inline-block; width: 40px; height: 20px; background: #e5e5e5; border-radius: 20px; cursor: pointer;">
+                        <input type="checkbox" id="analytics-checkbox" style="position: absolute; opacity: 0; width: 0; height: 0;">
+                        <span class="toggle-slider" style="position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: left 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3);"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Cookies marketing -->
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Cookies marketing</h4>
+                        <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.8;">
+                            Pour les intégrations YouTube et Twitch
+                        </p>
+                    </div>
+                    <label class="toggle-switch" style="position: relative; display: inline-block; width: 40px; height: 20px; background: #e5e5e5; border-radius: 20px; cursor: pointer;">
+                        <input type="checkbox" id="marketing-checkbox" style="position: absolute; opacity: 0; width: 0; height: 0;">
+                        <span class="toggle-slider" style="position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: left 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3);"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: right;">
+            <button id="save-preferences" style="padding: 10px 20px; background: #3482F6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 14px; box-shadow: 0 2px 10px rgba(52, 130, 246, 0.3);">Enregistrer mes choix</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+    
+{% block javascripts %}
+    <script src="https://player.twitch.tv/js/embed/v1.js"></script>
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('base') }}
+    {{ encore_entry_script_tags('cookie') }}
+{% endblock %}
+
+
+</body>
+</html>
+
+

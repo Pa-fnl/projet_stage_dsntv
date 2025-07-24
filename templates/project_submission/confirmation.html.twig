@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de soumission | DSNTV{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Merci pour votre soumission!</h2>
+                    <p class="card-text">
+                        Votre projet a été reçu avec succès. Notre équipe va l'examiner dans les plus brefs délais.
+                    </p>
+                    <p class="card-text">
+                        Vous recevrez un email de confirmation à l'adresse que vous avez fournie. 
+                        Nous vous contacterons pour discuter des détails de votre projet.
+                    </p>
+                    <div class="mt-4">
+                        <a href="{{ path('app_homepage') }}" class="btn btn-primary">Retour à l'accueil</a>
+                        {% if app.user %}
+                            <a href="{{ path('app_my_projects') }}" class="btn btn-outline-primary">Voir mes projets</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

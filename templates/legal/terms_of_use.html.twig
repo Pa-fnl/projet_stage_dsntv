@@ -1,0 +1,501 @@
+{% extends 'legal/base_legal.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Styles pour la page CGU */
+        .legal-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: var(--card-bg, #1e1e1e);
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .legal-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .legal-header:after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color, #00bf7f), var(--secondary-color, #fcd116));
+        }
+
+        .legal-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-color, #e0e0e0);
+        }
+
+        .legal-content section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--primary-color, #00bf7f);
+            transition: transform 0.3s ease;
+        }
+
+        .legal-content section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .legal-content h2 {
+            color: var(--secondary-color, #fcd116);
+            font-size: 1.4rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .legal-content h3 {
+            color: var(--primary-color, #00bf7f);
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .legal-content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: var(--text-color, #e0e0e0);
+        }
+
+        .legal-content ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .legal-content li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .legal-content li:before {
+            content: "•";
+            color: var(--primary-color, #00bf7f);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .legal-content a {
+            color: var(--primary-color, #00bf7f);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .legal-content a:hover {
+            color: var(--secondary-color, #fcd116);
+        }
+
+        .legal-content a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--secondary-color, #fcd116);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .legal-content a:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .legal-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: var(--text-muted, #9e9e9e);
+        }
+        
+        /* Effet de navigation par ancre */
+        :target {
+            animation: highlight 2s ease;
+        }
+        
+        @keyframes highlight {
+            0% { background-color: rgba(var(--primary-color-rgb, 0, 191, 127), 0.2); }
+            100% { background-color: rgba(255, 255, 255, 0.02); }
+        }
+        
+        /* Table des matières */
+        .toc {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 3px solid var(--secondary-color, #fcd116);
+        }
+        
+        .toc h3 {
+            margin-top: 0 !important;
+            margin-bottom: 1rem !important;
+            color: var(--secondary-color, #fcd116) !important;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .toc li {
+            margin-bottom: 0.5rem;
+            padding-left: 0;
+        }
+        
+        .toc li:before {
+            display: none;
+        }
+        
+        .toc a {
+            display: block;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
+        }
+        
+        .toc a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Conditions générales d'utilisation | {{ parent() }}{% endblock %}
+
+{% block legal_content %}
+<div class="legal-container">
+    <header class="legal-header">
+        <h1>{% block legal_title %}Conditions générales d'utilisation{% endblock %}</h1>
+        <p>Merci de lire attentivement ces conditions avant d'utiliser notre site</p>
+    </header>
+
+    <div class="legal-content">
+        <!-- Table des matières -->
+        <div class="toc">
+            <h3>Sommaire</h3>
+            <ul>
+                <li><a href="#section1">1. Mentions légales – Identité</a></li>
+                <li><a href="#section2">2. Acceptation des conditions générales d'utilisation</a></li>
+                <li><a href="#section3">3. Création d'un compte en ligne</a></li>
+                <li><a href="#section4">4. Commentaires et contenus mis en ligne par l'utilisateur</a></li>
+                <li><a href="#section5">5. Obligations et engagements de l'utilisateur</a></li>
+                <li><a href="#section6">6. Engagements de {{ company_name }}</a></li>
+                <li><a href="#section7">7. Propriété intellectuelle</a></li>
+                <li><a href="#section8">8. Conservation des données d'identification</a></li>
+                <li><a href="#section9">9. Données personnelles</a></li>
+                <li><a href="#section10">10. Modification des conditions générales d'utilisation</a></li>
+                <li><a href="#section11">11. Clôture du compte de l'utilisateur</a></li>
+                <li><a href="#section12">12. Liens hypertextes</a></li>
+                <li><a href="#section13">13. Réclamations – Solution amiable</a></li>
+                <li><a href="#section14">14. Langue-Droit applicable-Litiges</a></li>
+            </ul>
+        </div>
+
+        <section id="section1">
+            <h2>1. MENTIONS LÉGALES – IDENTITÉ</h2>
+            <p>
+                Le site {{ website_url }} est édité par la société {{ company_name }}, {{ company_type }} {% if capital and capital != '-' %}au capital de {{ capital }} €{% endif %}, immatriculée au RCS de Paris sous le n° {{ registration_number }} dont le numéro SIRET est le {{siret_number}} et le siège social est {{ company_address }} représentée par {{ publication_director }}, en sa qualité de directeur de publication.
+            </p>
+            <p>
+                Adresse mail : <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>
+            </p>
+            <p>
+                Le Directeur de publication est {{ publication_director }}.
+            </p>
+            <p>
+                Le site {{ website_url }} est hébergé par la société {{ host_name }} dont le siège social est {{ host_address }}.
+            </p>
+        </section>
+
+        <section id="section2">
+            <h2>2. ACCEPTATION DES CONDITIONS GÉNÉRALES D'UTILISATION</h2>
+            <p>
+                Pour pouvoir utiliser les services proposés par {{ company_name }}, l'Utilisateur doit s'inscrire et à cette occasion, doit prendre connaissance des présentes conditions générales d'utilisation ainsi que de la politique de confidentialité et les accepter.
+            </p>
+            <p>
+                L'Utilisateur accepte donc les conditions générales d'utilisation et de s'y conformer. Ces dernières lui sont donc opposables.
+            </p>
+        </section>
+
+        <section id="section3">
+            <h2>3. CRÉATION D'UN COMPTE EN LIGNE</h2>
+            <h3>3.1. Inscription et connexion</h3>
+            <p>
+                Afin d'avoir accès à certains services proposés par {{ company_name }}, l'utilisateur doit créer un compte en ligne.
+            </p>
+            <p>
+                Pour ce faire, l'Utilisateur peut se connecter en utilisant son compte Google via notre interface de connexion. Cette connexion est sécurisée et permet à l'Utilisateur d'accéder à nos services sans avoir à créer un compte spécifique.
+            </p>
+            <p>
+                En s'inscrivant, l'Utilisateur déclare avoir la pleine capacité de le faire.
+            </p>
+            <p>
+                L'inscription est effectuée pour une durée indéterminée.
+            </p>
+            
+            <h3>3.2. Identifiant et sécurité</h3>
+            <p>
+                Le compte Google de l'Utilisateur étant utilisé comme moyen d'authentification, l'Utilisateur est responsable de la sécurité de son compte Google et s'engage à prendre toutes les précautions nécessaires pour en préserver la confidentialité.
+            </p>
+            <p>
+                L'Utilisateur devra informer, sans délai, {{ company_name }} s'il constate une faille de sécurité liée notamment à un accès non autorisé à son compte.
+            </p>
+            
+            <h3>3.3. Contenu du compte</h3>
+            <p>
+                L'Utilisateur pourra mettre à jour ses données via son compte en ligne.
+            </p>
+        </section>
+
+        <section id="section4">
+            <h2>4. COMMENTAIRES ET CONTENUS MIS EN LIGNE PAR L'UTILISATEUR</h2>
+            <h3>4.1. Pas de modération a priori</h3>
+            <p>
+                {{ company_name }} offre la possibilité aux Utilisateurs de mettre en ligne des commentaires, de répondre à des commentaires et/ou de partager lesdits commentaires dans des espaces dédiés.
+            </p>
+            <p>
+                Ces commentaires ou contenus rédigés par les Utilisateurs sont mis en ligne sans contrôle a priori de {{ company_name }}. Il n'y a donc pas de modération avant la publication du commentaire.
+            </p>
+            <p>
+                L'Utilisateur a conscience que le commentaire, une fois publié, sera accessible par tout le monde. Il s'engage donc à respecter les dispositions de l'article 5.1. des présentes conditions générales d'utilisation.
+            </p>
+            <p>
+                Tout contenu diffusé par l'Utilisateur est de sa responsabilité. L'Utilisateur doit s'assurer, avant de mettre en ligne, son commentaire qu'il dispose des droits et autorisations, le cas échéant et que ce contenu respecte les conditions générales d'utilisation.
+            </p>
+            <p>
+                {{ company_name }} a la faculté de supprimer le ou les commentaire(s) et de supprimer le compte de l'Utilisateur concerné en cas de violation de l'une des dispositions des présentes conditions générales d'utilisation.
+            </p>
+            <p>
+                {{ company_name }} dispose aussi de cette faculté en cas de dénonciation d'un contenu manifestement illicite par toute tierce personne conformément à la loi.
+            </p>
+            
+            <h3>4.2. Propriété du contenu – des commentaires mis en ligne par l'Utilisateur</h3>
+            <p>
+                Tout contenu créé, rédigé, diffusé par l'Utilisateur reste sa propriété.
+            </p>
+            <p>
+                En diffusant en ligne des commentaires et du contenu, l'Utilisateur autorise gratuitement expressément {{ company_name }} à le rendre accessible sur le site {{ website_url }} pour le monde entier.
+            </p>
+        </section>
+
+        <section id="section5">
+            <h2>5. OBLIGATIONS ET ENGAGEMENTS DE L'UTILISATEUR</h2>
+            <h3>5.1. Mise en ligne de commentaires</h3>
+            <p>
+                L'Utilisateur s'engage à ne pas :
+            </p>
+            <ul>
+                <li>Diffuser de publicité</li>
+                <li>Utiliser des propos diffamants ou injurieux</li>
+                <li>Utiliser des propos discriminatoires, xénophobes et/ou incitant à la violence ou à la haine</li>
+                <li>Diffuser des informations confidentielles ou relevant d'un savoir-faire ou encore du secret des affaires</li>
+                <li>Diffuser dans les avis des liens renvoyant vers des sites tiers, numéro de téléphone payant ou non, des adresses mails et/ou postales</li>
+                <li>Diffuser de fausses informations ou toutes informations non vérifiées</li>
+                <li>Diffuser de propos, qui de manière générale, porterait atteinte à un droit d'un tiers ou à une loi, un règlement, un décret en vigueur</li>
+                <li>Présenter de manière inexacte des diplômes et postes précédents et/ou actuels</li>
+                <li>Créer un profil d'utilisateur pour quiconque autre que pour l'Utilisateur</li>
+                <li>Utiliser ou tenter d'utiliser le compte d'une autre personne</li>
+            </ul>
+            
+            <h3>5.2. Signaler une infraction</h3>
+            <p>
+                Chaque Utilisateur dispose de la faculté d'informer {{ company_name }} d'un contenu qu'il jugerait illicite. {{ company_name }} décidera de supprimer ou non ledit commentaire en conformité avec les dispositions légales.
+            </p>
+            <p>
+                {{ company_name }} est informé que toute dénonciation d'un contenu dont il sait qu'il n'est pas illicite est susceptible de poursuites judiciaires et est puni d'une peine d'un (1) an d'emprisonnement et de 15.000 € d'amende.
+            </p>
+            
+            <h3>5.3. Engagement général</h3>
+            <p>
+                L'Utilisateur s'engage à respecter les conditions d'utilisation du site.
+            </p>
+            <p>
+                L'Utilisateur s'engage à prendre toutes les précautions nécessaires afin de protéger au mieux l'ensemble de son système informatique et de ses terminaux de l'intrusion illicite dans son système informatique ou de toute contamination par des virus. L'Utilisateur est expressément informé que {{ company_name }} ne pourra pas voir sa responsabilité engagée dans cette hypothèse.
+            </p>
+            <p>
+                Par contenu, il faut notamment comprendre : toute donnée, information, fichier, texte, image, vidéo et audio, code, élément de navigation, nom de domaine, lien hypertexte, logo et dessin.
+            </p>
+            <p>
+                L'Utilisateur s'engage à ne pas diffuser un contenu contraire aux lois et règlements en vigueur, notamment :
+            </p>
+            <ul>
+                <li>Contraire à l'ordre public</li>
+                <li>Portant atteinte au droit à l'image et à la vie privée d'autrui</li>
+                <li>Portant atteinte à un droit de propriété intellectuelle d'une tierce personne (marque, droit d'auteur, dessins et modèles)</li>
+                <li>Qui constituerait une infraction aux dispositions de la loi du 29 juillet 1881 sur la liberté de la presse (injure, diffamation…)</li>
+                <li>À caractère pornographique ou indécent, notamment lorsque des mineurs peuvent y avoir accès</li>
+                <li>À caractère fasciste, xénophobe, raciste ou sectaire</li>
+                <li>Malveillant, vulgaire, obscène, frauduleux</li>
+                <li>Des propos et/ou images à caractère insultant, humiliant ou portant atteinte à la vie privée d'une personne</li>
+                <li>Susceptible de porter atteinte au respect de la personne humaine ou de sa dignité, à l'égalité entre les femmes et les hommes, à la protection des mineurs</li>
+                <li>Encourageant la discrimination, l'injure, la haine ou la violence</li>
+                <li>Faisant l'apologie ou la négation de crimes de guerre et/ou contre l'humanité</li>
+                <li>Encourageant des activités illégales (terrorisme, agressions, etc.)</li>
+            </ul>
+        </section>
+
+        <section id="section6">
+            <h2>6. ENGAGEMENTS DE {{ company_name|upper }}</h2>
+            <h3>6.1. Accessibilité</h3>
+            <p>
+                {{ company_name }} s'engage à assurer l'accessibilité à ses services 24h sur 24h et 7 jours sur 7, à l'exception des périodes de maintenance et d'un cas de force majeure.
+            </p>
+            <p>
+                L'Utilisateur est informé que la connexion aux services s'effectue via le réseau Internet. Il est averti des aléas techniques qui peuvent affecter ce réseau et entraîner des ralentissements ou des indisponibilités rendant la connexion impossible. {{ company_name }} ne peut être tenu responsable des difficultés d'accès aux services dus à des perturbations du réseau Internet.
+            </p>
+            
+            <h3>6.2. Sécurité</h3>
+            <p>
+                {{ company_name }} s'engage à mettre en œuvre les moyens techniques conformes à l'état de l'art afin d'assurer la sécurité du site ainsi que des données hébergées. {{ company_name }} s'engage à mettre en œuvre les moyens nécessaires afin d'assurer la conservation et l'intégrité physique du contenu.
+            </p>
+            
+            <h3>6.3. Exonération de responsabilité</h3>
+            <p>
+                La responsabilité de {{ company_name }} ne pourra pas être engagée dans les hypothèses suivantes :
+            </p>
+            <ul>
+                <li>Utilisation du site {{ website_url }} d'une façon non prévue aux conditions générales d'utilisation</li>
+                <li>Survenance de tout dommage qui résulterait d'une faute ou d'une négligence de l'Utilisateur</li>
+                <li>Un cas de force majeure</li>
+                <li>Données créées, stockées, communiquées et/ou diffusées par l'Utilisateur</li>
+            </ul>
+        </section>
+
+        <section id="section7">
+            <h2>7. PROPRIÉTÉ INTELLECTUELLE</h2>
+            <h3>7.1. Les marques</h3>
+            <p>
+                L'inscription et l'utilisation des services offerts par {{ company_name }} sur son site {{ website_url }} n'entraîne aucun transfert des droits de propriété intellectuelle que {{ company_name }} détient sur ses marques au profit de l'Utilisateur.
+            </p>
+            <p>
+                Toute reproduction de l'une de ses marques sans l'autorisation préalable et écrite de {{ company_name }} est constitutive d'un acte de contrefaçon et sera susceptible d'entraîner, outre la clôture du compte, des poursuites judiciaires.
+            </p>
+            
+            <h3>7.2. Le site Internet</h3>
+            <p>
+                {{ company_name }} est titulaire de tous les droits d'auteur afférents à son site dans sa globalité ainsi que sur chaque élément à savoir notamment la charte graphique, le contenu rédactionnel, les photographies, logiciels, dessins et bases de données. Cela ne concerne pas le contenu mis en ligne ou partagé par l'Utilisateur.
+            </p>
+            <p>
+                L'inscription en ligne sur le site {{ website_url }} n'entraine aucun transfert de propriété intellectuelle au profit de l'Utilisateur.
+            </p>
+            <p>
+                L'Utilisateur dispose d'un droit d'utilisation du site Internet, non exclusif, non cessible et limité à la durée du contrat.
+            </p>
+        </section>
+
+        <section id="section8">
+            <h2>8. CONSERVATION DES DONNÉES D'IDENTIFICATION</h2>
+            <p>
+                Conformément à l'article 6-II de la loi sur la confiance dans l'économie numérique n°2004-575 du 21 juin 2004 et de son décret d'application n°2011-219 du 25 février 2011, {{ company_name }} est soumis à l'obligation légale de conserver les données d'identification des personnes ayant créé un compte.
+            </p>
+            <p>
+                {{ company_name }} pourra être amené à communiquer ces données d'identification sur demande de l'autorité judiciaire.
+            </p>
+        </section>
+
+        <section id="section9">
+            <h2>9. DONNÉES PERSONNELLES</h2>
+            <p>
+                {{ company_name }} s'engage à assurer la confidentialité et la sécurité de vos données personnelles. {{ company_name }} invite l'Utilisateur à prendre connaissance de la <a href="{{ path('privacy_policy') }}">Politique de confidentialité</a> de {{ company_name }}.
+            </p>
+        </section>
+
+        <section id="section10">
+            <h2>10. MODIFICATION DES CONDITIONS GÉNÉRALES D'UTILISATION</h2>
+            <p>
+                {{ company_name }} se réserve le droit de modifier ses conditions générales d'utilisation pour les adapter notamment à ses services et à la législation, le cas échéant.
+            </p>
+            <p>
+                L'Utilisateur devra prendre connaissance régulièrement des conditions générales d'utilisation accessible via un lien hypertexte placé en bas de chaque page du site internet et qui peuvent être imprimées par l'Utilisateur.
+            </p>
+        </section>
+
+        <section id="section11">
+            <h2>11. CLÔTURE DU COMPTE DE L'UTILISATEUR</h2>
+            <h3>11.1. À l'initiative de l'Utilisateur</h3>
+            <p>
+                L'Utilisateur peut clôturer son compte en ligne à tout moment et sans motif. Pour ce faire, il doit contacter {{ company_name }} via l'adresse email <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
+            </p>
+            
+            <h3>11.2. À l'initiative de {{ company_name }}</h3>
+            <p>
+                {{ company_name }} dispose de la possibilité de clôturer le compte de l'Utilisateur en cas de violation de l'une des dispositions des présentes conditions générales d'utilisation. Dans cette hypothèse, l'Utilisateur ne pourra pas créer à nouveau un compte sur le site {{ website_url }}.
+            </p>
+            <p>
+                {{ company_name }} pourra clôturer le compte d'un Utilisateur après une durée de 3 ans courant à compter de la dernière activité de l'Utilisateur sur son compte en ligne.
+            </p>
+        </section>
+
+        <section id="section12">
+            <h2>12. LIENS HYPERTEXTES</h2>
+            <p>
+                {{ company_name }} peut mettre à la disposition des Utilisateurs des liens vers d'autres sites web.
+            </p>
+            <p>
+                Les services et contenus disponibles sur les sites des divers partenaires ou autres tierces personnes sont rendus et diffusés sous la seule et entière responsabilité de ces partenaires ou tierces personnes.
+            </p>
+            <p>
+                {{ company_name }} ne peut être tenu responsable en cas d'indisponibilité du site Internet de l'un de ses partenaires ou tierces personnes. {{ company_name }} ne peut pas davantage voir sa responsabilité engagée du fait du contenu disponible sur lesdits sites.
+            </p>
+        </section>
+
+        <section id="section13">
+            <h2>13. RÉCLAMATIONS – SOLUTION AMIABLE</h2>
+            <p>
+                Pour toute demande d'informations, réclamations, l'Utilisateur pourra adresser sa demande à :
+            </p>
+            <p>
+                {{ company_name }} – {{ company_address }}<br>
+                Par adresse mail : <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>
+            </p>
+        </section>
+
+        <section id="section14">
+            <h2>14. LANGUE-DROIT APPLICABLE- LITIGES</h2>
+            <h3>14.1. Langue et droit applicable</h3>
+            <p>
+                Les conditions générales d'utilisation sont rédigées en langue française et sont soumises au droit français.
+            </p>
+            
+            <h3>14.2. Litiges</h3>
+            <p>
+                Tout litige ou différent intervenant entre l'Utilisateur et {{ company_name }} est de la seule compétence des tribunaux français.
+            </p>
+        </section>
+    </div>
+
+    <footer class="legal-footer">
+        <p>Dernière mise à jour : {% block last_update %}17/04/2024{% endblock %}</p>
+        <p><a href="#" onclick="window.print(); return false;">Imprimer ces conditions générales</a></p>
+    </footer>
+</div>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ show.title }} - DSNTV{% endblock %}
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .show-detail-container {
+        padding: 2rem 0;
+        background-color: #121212;
+        min-height: 100vh;
+        color: #fff;
+    }
+    .show-header {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        background-color: #1e1e1e;
+        padding: 2rem;
+        border-radius: 8px;
+    }
+    .show-thumbnail {
+        flex: 0 0 300px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .show-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .show-info {
+        flex-grow: 1;
+    }
+    .show-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .show-description {
+        color: #aaa;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+    .show-meta {
+        display: flex;
+        gap: 1.5rem;
+        color: #aaa;
+        margin-bottom: 1.5rem;
+    }
+    .show-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .episodes-section {
+        margin-top: 2rem;
+    }
+    .episodes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    .episode-card {
+        background-color: #1e1e1e;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+    .episode-card:hover {
+        transform: translateY(-5px);
+    }
+    .episode-thumbnail {
+        position: relative;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    }
+    .episode-thumbnail img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .episode-info {
+        padding: 1rem;
+    }
+    .episode-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #fff;
+    }
+    .episode-meta {
+        display: flex;
+        justify-content: space-between;
+        color: #aaa;
+        font-size: 0.9rem;
+    }
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: #333;
+        color: #fff;
+        padding: 0.6rem 1.2rem;
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+        transition: background-color 0.3s;
+    }
+    .back-button:hover {
+        background-color: #444;
+        color: #fff;
+        text-decoration: none;
+    }
+    .no-episodes {
+        text-align: center;
+        padding: 2rem;
+        background-color: #1e1e1e;
+        border-radius: 8px;
+        color: #aaa;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="show-detail-container">
+    <div class="container">
+        <a href="{{ path('app_shows') }}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Retour aux émissions
+        </a>
+    <!-- Show Header -->
+    <div class="show-header">
+        <div class="show-thumbnail">
+            <img src="{{ show.thumbnailUrl }}" alt="{{ show.title }}">
+        </div>
+        <div class="show-info">
+            <h1 class="show-title">{{ show.title }}</h1>
+            
+            {% if show.description %}
+                <p class="show-description">{{ show.description }}</p>
+            {% endif %}
+            
+            <div class="show-meta">
+                {% if show.host %}
+                    <div class="show-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>{{ show.host }}</span>
+                    </div>
+                {% endif %}
+                
+                {% if show.category %}
+                    <div class="show-meta-item">
+                        <i class="fas fa-tags"></i>
+                        <span>{{ show.category }}</span>
+                    </div>
+                {% endif %}
+                
+                <div class="show-meta-item">
+                    <i class="fas fa-video"></i>
+                    <span>{{ show.videos|length }} épisodes</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Episodes Section -->
+    <div class="episodes-section">
+        <h2 class="text-2xl font-bold mb-6">Épisodes</h2>
+        
+        {% if show.videos|length > 0 %}
+            <div class="episodes-grid">
+                {% for video in show.videos|sort((a, b) => b.publishedAt <=> a.publishedAt) %}
+                    <a href="{{ path('app_vod_show', {'id': video.id}) }}" class="episode-card">
+                        <div class="episode-thumbnail">
+                            <img src="{{ video.thumbnailUrl }}" alt="{{ video.title }}">
+                        </div>
+                        <div class="episode-info">
+                            <h3 class="episode-title">
+                                {% if video.episodeNumber %}
+                                    Épisode {{ video.episodeNumber }} : 
+                                {% endif %}
+                                {{ video.title }}
+                            </h3>
+                            <div class="episode-meta">
+                                <span>{{ video.publishedAt|date('d M Y') }}</span>
+                                <span>
+                                    <i class="fas fa-thumbs-up"></i> 
+                                    {{ video.likeCount }}
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-episodes">
+                <h3>Aucun épisode disponible pour le moment</h3>
+                <p>Cette émission n'a pas encore de vidéos publiées.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+{% endblock %}

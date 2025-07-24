@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration des projets | DSNTV{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('admin_project_submissions_styles') }}
+    
+{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="admin-header text-white">
+        <div class="admin-header-content">
+            <div class="admin-header-icon">
+                <i class="ri-folder-shield-2-line"></i>
+            </div>
+            <div class="admin-header-text">
+                <h1>Administration des projets</h1>
+                <p>Gérez les soumissions de projets pour "Votre voix dans la diaspora"</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="admin-summary">
+        <div class="project-count">
+            <span class="count-number">{{ submissions|length }}</span>
+            <span class="count-label">Projet{{ submissions|length > 1 ? 's' : '' }}</span>
+        </div>
+    </div>
+    
+    <div class="admin-table-container">
+        {% if submissions|length > 0 %}
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th class="th-title">Titre</th>
+                        <th class="th-type">Type</th>
+                        <th class="th-author">Proposé par</th>
+                        <th class="th-date">Date</th>
+                        <th class="th-status">Statut</th>
+                        <th class="th-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for submission in submissions %}
+                        <tr>
+                            <td class="td-title">{{ submission.projectTitle }}</td>
+                            <td class="td-type">
+                                {% if submission.projectType == 'existing_show' %}
+                                    <span class="project-type show">Participation</span>
+                                {% elseif submission.projectType == 'new_concept' %}
+                                    <span class="project-type concept">Nouveau concept</span>
+                                {% elseif submission.projectType == 'report' %}
+                                    <span class="project-type report">Reportage</span>
+                                {% endif %}
+                            </td>
+                            <td class="td-author">{{ submission.name }}</td>
+                            <td class="td-date">{{ submission.createdAt|date('d/m/Y') }}</td>
+                            <td class="td-status">
+                                <span class="status-badge bg-{{ submission.status.badgeClass }}">
+                                    {{ submission.status.label }}
+                                </span>
+                            </td>
+                            <td class="td-actions">
+                                <a href="{{ path('admin_project_submission_show', {'id': submission.id}) }}" class="btn-view">
+                                    <i class="ri-eye-line"></i> Voir
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="no-projects">
+                <div class="no-projects-icon">
+                    <i class="ri-inbox-line"></i>
+                </div>
+                <p>Aucun projet n'a été soumis pour le moment.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
