@@ -58,7 +58,7 @@ Ce dépôt contient une sélection de fichiers issus du développement de la pla
 
 ## 🖼️ Aperçu (maquette)
 
-![aperçu DSNTV](./screenshot-dsntv.png)
+![aperçu DSNTV](./bento_dsntv.png)
 
 
 
