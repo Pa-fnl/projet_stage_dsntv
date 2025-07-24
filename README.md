@@ -60,7 +60,7 @@ Ce dépôt contient une sélection de fichiers issus du développement de la pla
 
 ![aperçu DSNTV](./screenshot-dsntv.png)
 
-> Tu peux intégrer une capture d’écran de la maquette Figma ou de la page d’accueil.
+
 
 ---
 
